@@ -1,6 +1,7 @@
 """Standing-task terms kept small and explicit for the first PPO milestone."""
 
 import torch
+from mjlab.utils.lab_api.math import quat_apply_inverse
 
 
 def terrain_curriculum(env, env_ids):
@@ -23,13 +24,143 @@ def terrain_curriculum(env, env_ids):
     return levels.float().mean()
 
 
-def feel_slide(env, asset_cfg, contact_height: float = 0.035):
-    """Penalize horizontal foot motion while a foot is close to the ground."""
+def _gait_phase(env, period: float) -> torch.Tensor:
+    env_index = torch.arange(env.num_envs, device=env.device, dtype=torch.float32)
+    env_offset = torch.remainder(env_index * 0.61803398875, 1.0)
+    elapsed = env.episode_length_buf.to(torch.float32) * env.step_dt
+    return torch.remainder(elapsed / period + env_offset, 1.0)
+
+
+def gait_phase_observation(env, period: float = 0.8) -> torch.Tensor:
+    """Encode the left-foot gait phase; the right foot is half a cycle later."""
+    phase = _gait_phase(env, period) * (2.0 * torch.pi)
+    return torch.stack((torch.sin(phase), torch.cos(phase)), dim=-1)
+
+
+def feet_slide(
+    env,
+    asset_cfg,
+    default_offsets: tuple[float, float] = (0.066965, -0.055035),
+    width_tolerance: float = 0.05,
+    command_name: str = "twist",
+    command_threshold: float = 0.01,
+):
+    """Penalize outward spread for vx, and inward collapse during lateral motion."""
     asset = env.scene[asset_cfg.name]
     foot_pos = asset.data.body_link_pos_w[:, asset_cfg.body_ids]
-    foot_vel = asset.data.body_link_lin_vel_w[:, asset_cfg.body_ids]
-    near_ground = (foot_pos[..., 2] < contact_height).to(foot_vel.dtype)
-    return torch.sum(near_ground * torch.sum(torch.square(foot_vel[..., :2]), dim=-1), dim=1)
+    root_pos = asset.data.root_link_pos_w
+    num_feet = foot_pos.shape[1]
+    foot_pos_b = quat_apply_inverse(
+        asset.data.root_link_quat_w[:, None, :].expand(-1, num_feet, -1),
+        foot_pos - root_pos[:, None, :],
+    )
+    lateral_offset = foot_pos_b[..., 1]
+    default_offsets_tensor = torch.tensor(
+        default_offsets,
+        device=foot_pos.device,
+        dtype=foot_pos.dtype,
+    )
+    signed_offset = (lateral_offset - default_offsets_tensor) * torch.sign(default_offsets_tensor)
+    command = env.command_manager.get_command(command_name)
+    lateral_motion = torch.abs(command[:, 1]) > command_threshold
+    outward_excess = torch.clamp(signed_offset - width_tolerance, min=0.0)
+    inward_excess = torch.clamp(-signed_offset, min=0.0)
+    excess = torch.where(lateral_motion[:, None], inward_excess, outward_excess)
+    return torch.sum(torch.square(excess / width_tolerance), dim=1)
+
+
+def feet_air_time(env, asset_cfg, contact_height: float = 0.065, max_air_time: float = 0.5):
+    """Reward each foot when it lands after spending time above the ground."""
+    asset = env.scene[asset_cfg.name]
+    foot_height = asset.data.body_link_pos_w[:, asset_cfg.body_ids, 2]
+    in_air = foot_height > contact_height
+    if not hasattr(env, "_thubo_feet_air_time"):
+        env._thubo_feet_air_time = torch.zeros_like(foot_height)
+    reset = env.episode_length_buf == 0
+    env._thubo_feet_air_time[reset] = 0.0
+    was_air = env._thubo_feet_air_time > 0.0
+    air_duration = env._thubo_feet_air_time
+    env._thubo_feet_air_time = torch.where(
+        in_air,
+        env._thubo_feet_air_time + env.step_dt,
+        torch.zeros_like(env._thubo_feet_air_time),
+    )
+    landed = was_air & ~in_air
+    return torch.sum(torch.where(landed, torch.clamp(air_duration, max=max_air_time), torch.zeros_like(foot_height)), dim=1)
+
+
+def feet_clearance_swing_reward(
+    env,
+    sensor_name: str,
+    asset_cfg,
+    command_name: str = "twist",
+    period: float = 0.8,
+    swing_ratio: float = 0.6,
+    target_height: float = 0.10,
+    clearance_tolerance: float = 0.02,
+    command_threshold: float = 0.05,
+    sole_half_thickness: float = 0.001,
+    min_swing_height: float = 0.04,
+    contact_penalty: float = 1.0,
+):
+    """Track a sinusoidal sole-clearance target during each foot's swing phase.
+
+    The sinusoid dips toward zero at the swing boundaries, so the target is
+    floored at ``min_swing_height``: a sole hovering a few millimetres above the
+    ground can no longer harvest the near-zero ends of the arc. Dragging the
+    sole through a nominal swing window used to be masked to zero reward; it is
+    now charged ``contact_penalty`` per foot so shuffling along the ground is
+    strictly worse than stepping.
+    """
+    sensor = env.scene[sensor_name]
+    found = sensor.data.found
+    if found is None:
+        raise RuntimeError(f"Sensor '{sensor_name}' must expose contact findings")
+    asset = env.scene[asset_cfg.name]
+    foot_clearance = torch.clamp(
+        asset.data.geom_pos_w[:, asset_cfg.geom_ids, 2] - sole_half_thickness,
+        min=0.0,
+    )
+    phase = _gait_phase(env, period)
+    foot_phase = torch.stack((phase, torch.remainder(phase + 0.5, 1.0)), dim=1)
+    in_swing = foot_phase < swing_ratio
+    swing_progress = torch.clamp(foot_phase / swing_ratio, min=0.0, max=1.0)
+    target_clearance = torch.clamp(
+        target_height * torch.sin(torch.pi * swing_progress), min=min_swing_height
+    )
+    in_contact = found.view(found.shape[0], 2, -1).any(dim=-1)
+    command = env.command_manager.get_command(command_name)
+    moving = torch.linalg.vector_norm(command[:, :3], dim=1) > command_threshold
+    active_swing = in_swing & ~in_contact & moving[:, None]
+    error = torch.square((foot_clearance - target_clearance) / clearance_tolerance)
+    per_foot_reward = torch.exp(-error) * active_swing.to(foot_clearance.dtype)
+    shuffling = in_swing & in_contact & moving[:, None]
+    per_foot_penalty = shuffling.to(foot_clearance.dtype) * contact_penalty
+    return per_foot_reward.sum(dim=1) - per_foot_penalty.sum(dim=1)
+
+
+def feet_flat_orientation_reward(
+    env,
+    sensor_name: str,
+    asset_cfg,
+    tilt_tolerance: float = 0.15,
+):
+    """Reward contacting soles whose local normal points vertically upward."""
+    found = env.scene[sensor_name].data.found
+    if found is None:
+        raise RuntimeError(f"Sensor '{sensor_name}' must expose contact findings")
+    asset = env.scene[asset_cfg.name]
+    sole_quat = asset.data.geom_quat_w[:, asset_cfg.geom_ids]
+    w, x, y, z = sole_quat.unbind(dim=-1)
+    normal_x = 2.0 * (x * z + w * y)
+    normal_y = 2.0 * (y * z - w * x)
+    horizontal_normal_sq = torch.square(normal_x) + torch.square(normal_y)
+    per_foot_reward = torch.exp(-horizontal_normal_sq / (tilt_tolerance * tilt_tolerance))
+    in_contact = found.view(found.shape[0], 2, -1).any(dim=-1)
+    contact_weight = in_contact.to(per_foot_reward.dtype)
+    return torch.sum(per_foot_reward * contact_weight, dim=1) / torch.clamp(
+        torch.sum(contact_weight, dim=1), min=1.0
+    )
 
 
 def root_height_reward(env, target: float = 0.39, std: float = 0.04):

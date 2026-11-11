@@ -13,17 +13,12 @@ from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.managers.termination_manager import TerminationTermCfg
 from mjlab.scene import SceneCfg
 from mjlab.sim import MujocoCfg, SimulationCfg
-from mjlab.tasks.registry import register_mjlab_task
 from mjlab.terrains import TerrainEntityCfg
 from mjlab.terrains.config import ALL_TERRAIN_PRESETS
 from mjlab.terrains.terrain_generator import TerrainGeneratorCfg
 
 from . import mdp as task_mdp
 from .robot import JOINT_NAMES, get_robot_cfg
-from .rl_cfg import dme_thubo_ppo_runner_cfg
-
-TASK_ID = "Feetech-Standing-12DoF"
-
 
 def dme_thubo_standing_env_cfg(
     *, play: bool = False, terrain: Literal["flat", "rough"] = "flat"
@@ -35,8 +30,7 @@ def dme_thubo_standing_env_cfg(
         terrain_cfg = TerrainEntityCfg(terrain_type="plane")
     elif terrain == "rough":
         terrain_names = (
-            "random_rough", "wave_terrain", "discrete_obstacles",
-            "perlin_noise", "box_random_grid", "random_spread_boxes",
+             "box_random_grid", "random_spread_boxes"
         )
         terrain_generator = TerrainGeneratorCfg(
             curriculum=True, size=(8.0, 8.0), border_width=20.0,
@@ -116,11 +110,3 @@ def dme_thubo_standing_env_cfg(
         scale_rewards_by_dt=False,
     )
     return cfg
-
-
-register_mjlab_task(
-    task_id=TASK_ID,
-    env_cfg=dme_thubo_standing_env_cfg(),
-    play_env_cfg=dme_thubo_standing_env_cfg(play=True),
-    rl_cfg=dme_thubo_ppo_runner_cfg(),
-)

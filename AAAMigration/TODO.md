@@ -1,4 +1,4 @@
-# 12-DoF Feetech STS3250: MJLab PPO + MuJoCo simulation
+# 12-DoF THUBO: MJLab PPO + MuJoCo simulation
 
 Architecture reference: [`ARCHITECTURE.md`](ARCHITECTURE.md), following the
 ManagerBased organization of
@@ -71,7 +71,6 @@ Registered ManagerBased task IDs:
 - [x] Add [`dme_thubo/rl_cfg.py`](../dme_thubo/rl_cfg.py) with RSL-RL PPO:
   ELU actor/critic MLPs `(256, 128)`, Adam learning rate `3e-4`, GAE
   `gamma=0.99`, `lambda=0.95`, 24 rollout steps per environment, and TensorBoard logging.
-- [x] Register task ID `Feetech-Standing-12DoF` with MJLab's task registry.
 - [x] Add [`scripts/train.py`](../scripts/train.py) to launch MJLab's PPO runner.
 - [x] Run a one-iteration PPO smoke test on CUDA: 8 envs × 4 steps; PPO completed with finite losses.
 - [x] Run the same local `.venv` PPO smoke entry point for `THUBO-Flat-Velocity`: 45-observation actor/critic, finite losses.

@@ -16,7 +16,7 @@ from mjlab.scripts.play import PlayConfig, run_play
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("task", help="Registered task, for example THUBO-Rough-Velocity")
+    parser.add_argument("task", help="Registered task, for example THUBO-Flat-Velocity")
     parser.add_argument("checkpoint", type=Path, help="Local model_*.pt checkpoint")
     parser.add_argument(
         "--viewer",

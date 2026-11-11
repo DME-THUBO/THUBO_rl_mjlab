@@ -36,7 +36,7 @@ def wait_for_checkpoint(run_dir: Path, training: subprocess.Popen, timeout: floa
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("task", nargs="?", default="THUBO-Rough-Velocity")
+    parser.add_argument("task", nargs="?", default="THUBO-Flat-Velocity")
     parser.add_argument("--num-envs", type=int, default=2048)
     parser.add_argument("--iterations", type=int, default=MAX_ITERATIONS)
     parser.add_argument("--save-interval", type=int, default=100)

@@ -16,7 +16,7 @@ from mjlab.scripts.train import TrainConfig
 
 
 if __name__ == "__main__":
-    task_id = os.environ.get("DME_THUBO_TASK", "THUBO-Rough-Velocity")
+    task_id = os.environ.get("DME_THUBO_TASK", "THUBO-Flat-Velocity")
     if len(sys.argv) > 1 and not sys.argv[1].startswith("-"):
         task_id = sys.argv[1]
     cfg = TrainConfig.from_task(task_id)

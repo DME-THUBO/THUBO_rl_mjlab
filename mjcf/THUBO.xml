@@ -61,6 +61,7 @@
             <geom name="left_hip_pitch_visual" type="mesh" mesh="left_hip_pitch_mesh" mass="0" contype="0" conaffinity="0" group="2" rgba=".25 .45 .6 1" />
           </body>
           <inertial mass="0.1661408167776368" pos="0.006935613612926656 0.021919684474490764 -0.06670663149796352" fullinertia="0.00024229447357548216 0.00021623421153879933 9.459196858433449e-05 2.417987557992279e-05 -5.380928891306514e-05 6.894040681094024e-05" />
+          <geom name="left_hip_roll_upper_collision" type="box" pos=".010 0 -.017" size=".026 .022 .034" mass="0" contype="1" conaffinity="1" rgba="0 0 0 0" />
           <geom name="left_hip_roll_visual" type="mesh" mesh="left_hip_roll_mesh" mass="0" contype="0" conaffinity="0" group="2" rgba=".25 .45 .6 1" />
         </body>
         <inertial mass="0.1615878955128724" pos="0.04185709598105593 -0.01495274375081967 -0.024496814355231166" fullinertia="0.00026821497202927913 0.00029027774981181184 9.976427849715531e-05 1.5091709983332721e-05 5.669635966037155e-05 -7.176492205010315e-05" />
@@ -95,6 +96,7 @@
             <geom name="right_hip_pitch_visual" type="mesh" mesh="right_hip_pitch_mesh" mass="0" contype="0" conaffinity="0" group="2" rgba=".25 .45 .6 1" />
           </body>
           <inertial mass="0.166306514404761" pos="0.006906040285103942 -0.02164327423781608 -0.06668273239789996" fullinertia="0.00024168541593125228 0.0002163361388173005 9.389250582022705e-05 -2.3609474640366212e-05 -5.370824197911774e-05 -6.780741186526495e-05" />
+          <geom name="right_hip_roll_upper_collision" type="box" pos=".010 0 -.017" size=".026 .022 .034" mass="0" contype="1" conaffinity="1" rgba="0 0 0 0" />
           <geom name="right_hip_roll_visual" type="mesh" mesh="right_hip_roll_mesh" mass="0" contype="0" conaffinity="0" group="2" rgba=".25 .45 .6 1" />
         </body>
         <inertial mass="0.16158718932480737" pos="0.04185715577622779 0.014952697885289938 -0.024496774883451096" fullinertia="0.00026821483559653046 0.0002902775590867447 9.97640683774137e-05 -1.5091811385646047e-05 5.66964469269803e-05 7.176485537527419e-05" />
