@@ -16,7 +16,7 @@ def recovery_cfg(robot="thubo",play=False,action_mode=None):
     cfg=dme_thubo_standing_env_cfg(play=play,terrain="flat")
     entity,meta=robot_cfg(robot)
     cfg.scene.entities={"robot":entity}
-    cfg.scene.num_envs=1 if play else int(os.environ.get("HOST_NUM_ENVS","256"))
+    cfg.scene.num_envs=1 if play else int(os.environ.get("HOST_NUM_ENVS","2048"))
     action_mode=action_mode or os.environ.get('HOST_ACTION_MODE','relative')
     if action_mode=='relative':
         cfg.actions={'joint_pos':RelativeJointPositionActionCfg(

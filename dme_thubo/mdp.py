@@ -1,8 +1,10 @@
 """Standing-task terms kept small and explicit for the first PPO milestone."""
 
 import torch
+from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.utils.lab_api.math import quat_apply_inverse, quat_from_euler_xyz
+from mjlab.utils.lab_api.string import resolve_matching_names_values
 
 
 def terrain_curriculum(env, env_ids):
@@ -179,6 +181,50 @@ def joint_position_penalty(env):
     default = robot.data.default_joint_pos
     assert default is not None
     return torch.sum(torch.square(robot.data.joint_pos - default), dim=1)
+
+
+class VariablePosture:
+    """Reward default pose with per-joint tolerances selected by command speed.
+
+    Follows Unitree's variable_posture: exp(-mean((q - q_default)^2 / std^2)).
+    Tolerances are reward scales in radians, not hard joint limits.
+    """
+
+    def __init__(self, cfg: RewardTermCfg, env):
+        asset_cfg = cfg.params["asset_cfg"]
+        robot = env.scene[asset_cfg.name]
+        _, names = robot.find_joints(asset_cfg.joint_names)
+        self.stds = []
+        for key in ("std_standing", "std_walking", "std_running"):
+            _, _, values = resolve_matching_names_values(cfg.params[key], names)
+            std = torch.tensor(values, device=env.device, dtype=torch.float32)
+            if len(values) != len(names) or not torch.all(std > 0):
+                raise ValueError(f"{key} must provide a positive tolerance for every joint")
+            self.stds.append(std)
+
+    def __call__(self, env, asset_cfg, command_name, std_standing, std_walking,
+                 std_running, walking_threshold=0.1, running_threshold=1.5):
+        del std_standing, std_walking, std_running
+        command = env.command_manager.get_command(command_name)
+        speed = torch.linalg.vector_norm(command[:, :2], dim=1) + command[:, 2].abs()
+        std = torch.where(
+            (speed < walking_threshold)[:, None], self.stds[0],
+            torch.where((speed < running_threshold)[:, None], self.stds[1], self.stds[2]),
+        )
+        robot = env.scene[asset_cfg.name]
+        error = (robot.data.joint_pos[:, asset_cfg.joint_ids]
+                 - robot.data.default_joint_pos[:, asset_cfg.joint_ids])
+        return torch.exp(-torch.mean(torch.square(error / std), dim=1))
+
+
+def stand_still(env, asset_cfg, command_name="twist", command_threshold=0.1):
+    """Return squared default-pose error only for near-zero velocity commands."""
+    robot = env.scene[asset_cfg.name]
+    error = (robot.data.joint_pos[:, asset_cfg.joint_ids]
+             - robot.data.default_joint_pos[:, asset_cfg.joint_ids])
+    command = env.command_manager.get_command(command_name)
+    speed = torch.linalg.vector_norm(command[:, :2], dim=1) + command[:, 2].abs()
+    return torch.square(error).sum(dim=1) * (speed <= command_threshold)
 
 
 def reset_fallen_pose(

@@ -40,7 +40,7 @@ def thubo_velocity_env_cfg(*, play: bool = False, terrain: str = "flat"):
         "twist": UniformVelocityCommandCfg(
             entity_name="robot",
             resampling_time_range=(3.0, 8.0),
-            rel_standing_envs=0.1,
+            rel_standing_envs=0.05,
             heading_command=True,
             heading_control_stiffness=0.5,
             ranges=UniformVelocityCommandCfg.Ranges(
@@ -60,8 +60,38 @@ def thubo_velocity_env_cfg(*, play: bool = False, terrain: str = "flat"):
             func=task_mdp.gait_phase_observation,
             params={"period": gait_period},
         )
+    # Replace the standing baseline's uniform weak posture penalty with
+    # Unitree-style speed-dependent pose shaping and a near-zero stop penalty.
+    cfg.rewards.pop("posture")
     cfg.rewards.update(
         {
+            "pose": RewardTermCfg(
+                func=task_mdp.VariablePosture,
+                weight=1.0,
+                params={
+                    "asset_cfg": robot,
+                    "command_name": "twist",
+                    "std_standing": {".*": 0.05},
+                    "std_walking": {
+                        ".*hip_pitch": 0.5, ".*hip_roll": 0.15,
+                        ".*hip_yaw": 0.15, ".*knee_pitch": 0.5,
+                        ".*ankle_pitch": 0.15, ".*ankle_roll": 0.1,
+                    },
+                    "std_running": {
+                        ".*hip_pitch": 0.5, ".*hip_roll": 0.25,
+                        ".*hip_yaw": 0.25, ".*knee_pitch": 0.5,
+                        ".*ankle_pitch": 0.25, ".*ankle_roll": 0.1,
+                    },
+                    "walking_threshold": 0.1,
+                    "running_threshold": 1.5,
+                },
+            ),
+            "stand_still": RewardTermCfg(
+                func=task_mdp.stand_still,
+                weight=-1.0,
+                params={"asset_cfg": robot, "command_name": "twist",
+                        "command_threshold": 0.1},
+            ),
             "track_linear_velocity": RewardTermCfg(
                 func=velocity_mdp.track_linear_velocity,
                 weight=2.0,
@@ -92,6 +122,7 @@ def thubo_velocity_env_cfg(*, play: bool = False, terrain: str = "flat"):
                     ),
                     "command_name": "twist",
                     "period": gait_period,
+                    "command_threshold": 0.1,
                     "swing_ratio": 0.6,
                     "target_height": 0.10,
                     "clearance_tolerance": 0.02,
