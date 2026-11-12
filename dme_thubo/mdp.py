@@ -1,5 +1,7 @@
 """Standing-task terms kept small and explicit for the first PPO milestone."""
 
+import math
+
 import torch
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
@@ -63,7 +65,9 @@ def feet_slide(
         device=foot_pos.device,
         dtype=foot_pos.dtype,
     )
-    signed_offset = (lateral_offset - default_offsets_tensor) * torch.sign(default_offsets_tensor)
+    signed_offset = (lateral_offset - default_offsets_tensor) * torch.sign(
+        default_offsets_tensor
+    )
     command = env.command_manager.get_command(command_name)
     lateral_motion = torch.abs(command[:, 1]) > command_threshold
     outward_excess = torch.clamp(signed_offset - width_tolerance, min=0.0)
@@ -72,7 +76,9 @@ def feet_slide(
     return torch.sum(torch.square(excess / width_tolerance), dim=1)
 
 
-def feet_air_time(env, asset_cfg, contact_height: float = 0.065, max_air_time: float = 0.5):
+def feet_air_time(
+    env, asset_cfg, contact_height: float = 0.065, max_air_time: float = 0.5
+):
     """Reward each foot when it lands after spending time above the ground."""
     asset = env.scene[asset_cfg.name]
     foot_height = asset.data.body_link_pos_w[:, asset_cfg.body_ids, 2]
@@ -89,7 +95,14 @@ def feet_air_time(env, asset_cfg, contact_height: float = 0.065, max_air_time: f
         torch.zeros_like(env._thubo_feet_air_time),
     )
     landed = was_air & ~in_air
-    return torch.sum(torch.where(landed, torch.clamp(air_duration, max=max_air_time), torch.zeros_like(foot_height)), dim=1)
+    return torch.sum(
+        torch.where(
+            landed,
+            torch.clamp(air_duration, max=max_air_time),
+            torch.zeros_like(foot_height),
+        ),
+        dim=1,
+    )
 
 
 def feet_clearance_swing_reward(
@@ -158,7 +171,9 @@ def feet_flat_orientation_reward(
     normal_x = 2.0 * (x * z + w * y)
     normal_y = 2.0 * (y * z - w * x)
     horizontal_normal_sq = torch.square(normal_x) + torch.square(normal_y)
-    per_foot_reward = torch.exp(-horizontal_normal_sq / (tilt_tolerance * tilt_tolerance))
+    per_foot_reward = torch.exp(
+        -horizontal_normal_sq / (tilt_tolerance * tilt_tolerance)
+    )
     in_contact = found.view(found.shape[0], 2, -1).any(dim=-1)
     contact_weight = in_contact.to(per_foot_reward.dtype)
     return torch.sum(per_foot_reward * contact_weight, dim=1) / torch.clamp(
@@ -199,29 +214,47 @@ class VariablePosture:
             _, _, values = resolve_matching_names_values(cfg.params[key], names)
             std = torch.tensor(values, device=env.device, dtype=torch.float32)
             if len(values) != len(names) or not torch.all(std > 0):
-                raise ValueError(f"{key} must provide a positive tolerance for every joint")
+                raise ValueError(
+                    f"{key} must provide a positive tolerance for every joint"
+                )
             self.stds.append(std)
 
-    def __call__(self, env, asset_cfg, command_name, std_standing, std_walking,
-                 std_running, walking_threshold=0.1, running_threshold=1.5):
+    def __call__(
+        self,
+        env,
+        asset_cfg,
+        command_name,
+        std_standing,
+        std_walking,
+        std_running,
+        walking_threshold=0.1,
+        running_threshold=1.5,
+    ):
         del std_standing, std_walking, std_running
         command = env.command_manager.get_command(command_name)
         speed = torch.linalg.vector_norm(command[:, :2], dim=1) + command[:, 2].abs()
         std = torch.where(
-            (speed < walking_threshold)[:, None], self.stds[0],
-            torch.where((speed < running_threshold)[:, None], self.stds[1], self.stds[2]),
+            (speed < walking_threshold)[:, None],
+            self.stds[0],
+            torch.where(
+                (speed < running_threshold)[:, None], self.stds[1], self.stds[2]
+            ),
         )
         robot = env.scene[asset_cfg.name]
-        error = (robot.data.joint_pos[:, asset_cfg.joint_ids]
-                 - robot.data.default_joint_pos[:, asset_cfg.joint_ids])
+        error = (
+            robot.data.joint_pos[:, asset_cfg.joint_ids]
+            - robot.data.default_joint_pos[:, asset_cfg.joint_ids]
+        )
         return torch.exp(-torch.mean(torch.square(error / std), dim=1))
 
 
 def stand_still(env, asset_cfg, command_name="twist", command_threshold=0.1):
     """Return squared default-pose error only for near-zero velocity commands."""
     robot = env.scene[asset_cfg.name]
-    error = (robot.data.joint_pos[:, asset_cfg.joint_ids]
-             - robot.data.default_joint_pos[:, asset_cfg.joint_ids])
+    error = (
+        robot.data.joint_pos[:, asset_cfg.joint_ids]
+        - robot.data.default_joint_pos[:, asset_cfg.joint_ids]
+    )
     command = env.command_manager.get_command(command_name)
     speed = torch.linalg.vector_norm(command[:, :2], dim=1) + command[:, 2].abs()
     return torch.square(error).sum(dim=1) * (speed <= command_threshold)
@@ -269,17 +302,21 @@ def reset_fallen_pose(
     root = asset.data.default_root_state[fallen_ids].clone()
     pos = root[:, 0:3] + env.scene.env_origins[fallen_ids]
     pos[:, 2] = (
-        root_height + (torch.rand(num, device=env.device) * 2.0 - 1.0) * root_height_jitter
+        root_height
+        + (torch.rand(num, device=env.device) * 2.0 - 1.0) * root_height_jitter
     )
-    asset.write_root_link_pose_to_sim(torch.cat([pos, quat], dim=-1), env_ids=fallen_ids)
+    asset.write_root_link_pose_to_sim(
+        torch.cat([pos, quat], dim=-1), env_ids=fallen_ids
+    )
     asset.write_root_link_velocity_to_sim(
         torch.zeros(num, 6, device=env.device), env_ids=fallen_ids
     )
 
     default_joint_pos = asset.data.default_joint_pos[fallen_ids]
-    joint_pos = default_joint_pos + (
-        torch.rand_like(default_joint_pos) * 2.0 - 1.0
-    ) * joint_jitter
+    joint_pos = (
+        default_joint_pos
+        + (torch.rand_like(default_joint_pos) * 2.0 - 1.0) * joint_jitter
+    )
     limits = asset.data.joint_pos_limits[fallen_ids]
     joint_pos = torch.max(torch.min(joint_pos, limits[..., 1]), limits[..., 0])
     asset.write_joint_state_to_sim(
@@ -334,46 +371,66 @@ def root_height_observation(env) -> torch.Tensor:
 
 
 # HoST ground-recovery terms; upstream attribution remains in LICENSE_HoST.
-import math
 
 HOST_GROUP_WEIGHTS = (2.5, 0.1, 1.0, 1.0)
+
 
 def host_tolerance(x, lower, margin, value_at_margin=0.1):
     distance = (lower - x).clamp_min(0) / margin
     return torch.exp(math.log(value_at_margin) * distance.square())
 
+
 def host_state(env):
-    if not hasattr(env, '_host'):
-        env._host = dict(assist=torch.full((env.num_envs,), 0.6, device=env.device), scale=torch.ones(env.num_envs, device=env.device), best=torch.zeros(env.num_envs, device=env.device), last_height=torch.zeros(env.num_envs, device=env.device), last_upright=torch.zeros(env.num_envs, device=env.device), groups=torch.zeros(env.num_envs, 4, device=env.device))
+    if not hasattr(env, "_host"):
+        env._host = dict(
+            assist=torch.full((env.num_envs,), 0.6, device=env.device),
+            scale=torch.ones(env.num_envs, device=env.device),
+            best=torch.zeros(env.num_envs, device=env.device),
+            last_height=torch.zeros(env.num_envs, device=env.device),
+            last_upright=torch.zeros(env.num_envs, device=env.device),
+            groups=torch.zeros(env.num_envs, 4, device=env.device),
+        )
     return env._host
 
-def reset_host_recovery(env, env_ids, height=0.39, reset_height=0.12, poses=('supine',), curriculum_mode='terminal'):
+
+def reset_host_recovery(
+    env,
+    env_ids,
+    height=0.39,
+    reset_height=0.12,
+    poses=("supine",),
+    curriculum_mode="terminal",
+):
     ids = torch.arange(env.num_envs, device=env.device) if env_ids is None else env_ids
     s = host_state(env)
     complete = env.episode_length_buf[ids] > 0
-    if curriculum_mode == 'terminal':
-        passed = (s['last_height'][ids] > 0.95 * height) & (s['last_upright'][ids] > 0.9) & complete
+    if curriculum_mode == "terminal":
+        passed = (
+            (s["last_height"][ids] > 0.95 * height)
+            & (s["last_upright"][ids] > 0.9)
+            & complete
+        )
     else:
-        passed = (s['best'][ids] > 0.95 * height) & complete
-    s['assist'][ids] = (s['assist'][ids] - 0.05 * passed).clamp_min(0)
-    s['scale'][ids] = (s['scale'][ids] - 0.02 * passed).clamp_min(0.25)
-    s['best'][ids] = 0
-    s['last_height'][ids] = 0
-    s['last_upright'][ids] = 0
-    robot = env.scene['robot']
+        passed = (s["best"][ids] > 0.95 * height) & complete
+    s["assist"][ids] = (s["assist"][ids] - 0.05 * passed).clamp_min(0)
+    s["scale"][ids] = (s["scale"][ids] - 0.02 * passed).clamp_min(0.25)
+    s["best"][ids] = 0
+    s["last_height"][ids] = 0
+    s["last_upright"][ids] = 0
+    robot = env.scene["robot"]
     n = len(ids)
     choice = torch.randint(len(poses), (n,), device=env.device)
     roll = torch.zeros(n, device=env.device)
     pitch = roll.clone()
     for i, pose in enumerate(poses):
         mask = choice == i
-        if pose == 'supine':
+        if pose == "supine":
             pitch[mask] = -math.pi / 2
-        elif pose == 'prone':
+        elif pose == "prone":
             pitch[mask] = math.pi / 2
-        elif pose == 'left':
+        elif pose == "left":
             roll[mask] = math.pi / 2
-        elif pose == 'right':
+        elif pose == "right":
             roll[mask] = -math.pi / 2
         else:
             raise ValueError(pose)
@@ -383,55 +440,84 @@ def reset_host_recovery(env, env_ids, height=0.39, reset_height=0.12, poses=('su
     pos = root[:, :3] + env.scene.env_origins[ids]
     pos[:, 2] = reset_height + env.scene.env_origins[ids, 2]
     robot.write_root_link_pose_to_sim(torch.cat((pos, quat), -1), env_ids=ids)
-    robot.write_root_link_velocity_to_sim(torch.zeros(n, 6, device=env.device), env_ids=ids)
+    robot.write_root_link_velocity_to_sim(
+        torch.zeros(n, 6, device=env.device), env_ids=ids
+    )
     q = robot.data.default_joint_pos[ids].clone()
     lim = robot.data.joint_pos_limits[ids]
     q = (q + (torch.rand_like(q) * 2 - 1) * 0.1).clamp(lim[..., 0], lim[..., 1])
     robot.write_joint_state_to_sim(q, torch.zeros_like(q), env_ids=ids)
 
+
 def host_proprioception(env):
-    r = env.scene['robot']
+    r = env.scene["robot"]
     s = host_state(env)
-    obs = torch.cat((r.data.root_link_ang_vel_b, r.data.projected_gravity_b, r.data.joint_pos, r.data.joint_vel, env.action_manager.action, s['scale'][:, None]), -1)
+    obs = torch.cat(
+        (
+            r.data.root_link_ang_vel_b,
+            r.data.projected_gravity_b,
+            r.data.joint_pos,
+            r.data.joint_vel,
+            env.action_manager.action,
+            s["scale"][:, None],
+        ),
+        -1,
+    )
     return obs.clamp(-100, 100)
 
-def host_grouped_reward(env, height=0.39, feet=('left_ankle_roll', 'right_ankle_roll')):
-    r = env.scene['robot']
+
+def host_grouped_reward(env, height=0.39, feet=("left_ankle_roll", "right_ankle_roll")):
+    r = env.scene["robot"]
     s = host_state(env)
     z = r.data.root_link_pos_w[:, 2] - env.scene.env_origins[:, 2]
     upright = -r.data.projected_gravity_b[:, 2]
-    s['best'] = torch.maximum(s['best'], z)
-    s['last_height'] = z.clone()
-    s['last_upright'] = upright.clone()
+    s["best"] = torch.maximum(s["best"], z)
+    s["last_height"] = z.clone()
+    s["last_upright"] = upright.clone()
     fids, _ = r.find_bodies(feet)
     foot = r.data.body_link_pos_w[:, fids]
     clearance = z - foot[:, :, 2].mean(-1) + env.scene.env_origins[:, 2]
-    task = host_tolerance(upright, 0.99, 1.0, 0.05) * host_tolerance(clearance, height, height, 0.1)
+    task = host_tolerance(upright, 0.99, 1.0, 0.05) * host_tolerance(
+        clearance, height, height, 0.1
+    )
     action = env.action_manager.action
     prev = env.action_manager.prev_action
     tau = r.data.qfrc_actuator
     vel = r.data.joint_vel
     limits = r.data.joint_pos_limits
-    violation = (limits[..., 0] - r.data.joint_pos).clamp_min(0) + (r.data.joint_pos - limits[..., 1]).clamp_min(0)
+    violation = (limits[..., 0] - r.data.joint_pos).clamp_min(0) + (
+        r.data.joint_pos - limits[..., 1]
+    ).clamp_min(0)
     regu = -0.01 * (action - prev).square().sum(-1) - 0.001 * vel.square().sum(-1)
-    regu -= 2.5e-06 * tau.square().sum(-1) + 2.5e-05 * (tau * vel).abs().sum(-1) + 100 * violation.sum(-1)
+    regu -= (
+        2.5e-06 * tau.square().sum(-1)
+        + 2.5e-05 * (tau * vel).abs().sum(-1)
+        + 100 * violation.sum(-1)
+    )
     standing = z > 0.95 * height
     style = -0.25 * (r.data.joint_pos - r.data.default_joint_pos).square().sum(-1)
     separation = (foot[:, 0, 1] - foot[:, 1, 1]).abs()
     style -= 10 * (separation - 0.12).abs() * standing
-    target = (10 * torch.exp(-2 * r.data.root_link_ang_vel_b[:, :2].square().sum(-1)) + 10 * torch.exp(-5 * r.data.root_link_lin_vel_b[:, :2].square().sum(-1)) + 10 * torch.exp(-5 * r.data.projected_gravity_b[:, :2].square().sum(-1)) + 10 * torch.exp(-20 * (z - height).abs())) * standing
-    s['groups'] = torch.stack((task, regu, style, target), -1)
-    return (s['groups'] * torch.tensor(HOST_GROUP_WEIGHTS, device=env.device)).sum(-1)
+    target = (
+        10 * torch.exp(-2 * r.data.root_link_ang_vel_b[:, :2].square().sum(-1))
+        + 10 * torch.exp(-5 * r.data.root_link_lin_vel_b[:, :2].square().sum(-1))
+        + 10 * torch.exp(-5 * r.data.projected_gravity_b[:, :2].square().sum(-1))
+        + 10 * torch.exp(-20 * (z - height).abs())
+    ) * standing
+    s["groups"] = torch.stack((task, regu, style, target), -1)
+    return (s["groups"] * torch.tensor(HOST_GROUP_WEIGHTS, device=env.device)).sum(-1)
 
-def apply_host_assistance(env, env_ids=None, base='pelvis', mass=2.946841787):
-    r = env.scene['robot']
+
+def apply_host_assistance(env, env_ids=None, base="pelvis", mass=2.946841787):
+    r = env.scene["robot"]
     s = host_state(env)
     ids, _ = r.find_bodies((base,))
     force = torch.zeros(env.num_envs, 1, 3, device=env.device)
     gate = (env.episode_length_buf > 30) & (-r.data.projected_gravity_b[:, 2] > 0.8)
-    force[:, 0, 2] = s['assist'] * mass * 9.81 * gate
+    force[:, 0, 2] = s["assist"] * mass * 9.81 * gate
     r.write_external_wrench_to_sim(force, torch.zeros_like(force), body_ids=ids)
 
+
 def host_nonfinite(env):
-    r = env.scene['robot']
+    r = env.scene["robot"]
     return ~torch.isfinite(r.data.joint_pos).all(-1)
