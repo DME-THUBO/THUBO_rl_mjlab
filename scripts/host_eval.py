@@ -8,7 +8,8 @@ def main():
     parser.add_argument('checkpoint',type=Path)
     parser.add_argument('--num-envs',type=int,default=8)
     parser.add_argument('--seconds',type=float,default=10.)
-    parser.add_argument('--action-scales',type=float,nargs='+',default=(1.,.5,.25))
+    parser.add_argument('--action-scales',type=float,nargs='+',default=None,
+        help='Default: the action scale recorded in the checkpoint; pass multiple values for an explicit sweep')
     parser.add_argument('--poses',nargs='+',default=('supine','prone','left','right'))
     parser.add_argument('--device',default='cuda:0')
     parser.add_argument('--output',type=Path,default=ROOT/'logs/host_evaluation.json')
@@ -22,6 +23,7 @@ def main():
     from src.tasks.HoST_getUp.ppo import load
     from src.tasks.HoST_getUp.mdp import state
     policy,checkpoint=load(args.checkpoint,args.device)
+    args.action_scales=args.action_scales or (checkpoint['metadata'].get('action_scale',1.),)
     _,meta=robot_cfg(checkpoint['robot'])
     rows=[]
     for scale in args.action_scales:

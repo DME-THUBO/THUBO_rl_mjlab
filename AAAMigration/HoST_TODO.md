@@ -19,7 +19,7 @@ Branch: `HoST/THUBO-mjlab-RL-recovery`.
 - [x] Evaluate the initial absolute-action model_1200: 0/24 held supine recoveries without assistance. Record this failure.
 - [ ] Evaluate corrected relative-action checkpoints; prone/side success remains unverified.
 - [x] Commit source on the requested branch with the supplied author email.
-- [ ] Push branch/open PR: requires GitHub device-login approval; no stored credentials were present.
+- [x] Push branch/open PR after GitHub device-login approval: https://github.com/DME-THUBO/THUBO_rl_mjlab/pull/2
 
 ## Follow-up validation, not claimed complete
 
