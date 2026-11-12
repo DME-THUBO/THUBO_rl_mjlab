@@ -27,12 +27,18 @@ def main():
     if a.device.startswith('cuda') and not torch.cuda.is_available():
         raise RuntimeError('CUDA unavailable; refusing to silently run the training on CPU')
     torch.manual_seed(42)
-    cfg=recovery_cfg(a.robot);cfg.auto_reset=False
+    action_mode=os.environ.get('HOST_ACTION_MODE','relative')
+    if a.resume:
+        header=torch.load(a.resume,map_location='cpu',weights_only=True)
+        if header['robot']!=a.robot: raise ValueError('Resume embodiment does not match --robot')
+        action_mode=header['metadata'].get('action_mode','absolute')
+    cfg=recovery_cfg(a.robot,action_mode=action_mode);cfg.auto_reset=False
     env=ManagerBasedRlEnv(cfg=cfg,device=a.device)
     run=a.run_dir or ROOT/'logs/host_getup'/f'{a.robot}_{time.strftime("%Y%m%d_%H%M%S")}'
     run.mkdir(parents=True,exist_ok=True)
     metadata=dict(robot=a.robot,device=a.device,smoke=a.smoke,seed=42,
         group_weights=mdp.GROUP_WEIGHTS,poses=os.environ.get('HOST_POSES','supine'),
+        action_mode=action_mode,
         success_verified=False,num_envs=a.num_envs,environment='mjlab',assistance='curriculum, not evaluation')
     try:
         obs,_=env.reset();x=obs['actor']
@@ -64,10 +70,12 @@ def main():
                 loss=update(policy,opt,(O,A,L,adv,ret),epochs=1 if a.smoke else 5)
                 row=dict(iteration=iteration,loss=loss,group_rewards=R.mean((0,1)).tolist(),
                     assistance=float(mdp.state(env)['assist'].mean()),
+                    action_scale=float(mdp.state(env)['scale'].mean()),
                     simulated_transitions=(iteration+1)*a.steps*a.num_envs)
                 log.write(json.dumps(row)+'\n');print(json.dumps(row),flush=True)
                 if iteration%a.save_interval==0 or iteration==start+a.iterations-1:
-                    save(run/f'model_{iteration}.pt',policy,opt,iteration,a.robot,metadata)
+                    snapshot_metadata=dict(metadata,action_scale=row['action_scale'],assistance=row['assistance'])
+                    save(run/f'model_{iteration}.pt',policy,opt,iteration,a.robot,snapshot_metadata)
         (run/'completion.json').write_text(json.dumps(dict(status='smoke_pass' if a.smoke else 'training_completed',
             iterations=a.iterations,success_verified=False),indent=2))
     finally:

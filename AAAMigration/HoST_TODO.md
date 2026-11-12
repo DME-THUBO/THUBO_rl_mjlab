@@ -11,10 +11,13 @@ Branch: `HoST/THUBO-mjlab-RL-recovery`.
 - [x] Implement `src/tasks/HoST_getUp`: robot adapters, fallen resets, six-frame observation history, grouped rewards, curriculum.
 - [x] Implement four-value PPO and atomic `.pt` saves; document differences from the upstream implementation.
 - [x] Both robots pass CUDA rollout/PPO smoke tests: 4 worlds, 2 updates, 64 transitions each, checkpoints saved.
+- [x] Repeat both CUDA smoke tests after correcting the controller to upstream current-position-relative semantics.
 - [x] Grouped timeout GAE and checkpoint round-trip checks pass.
 - [x] Start THUBO recovery training: 256 worlds, 2,000 planned updates on RTX 5070 Ti Laptop GPU (12GB).
+- [x] Start a separate corrected relative-action run; action convention is recorded in checkpoint metadata.
 - [x] Viser HTTP 200 at localhost:8080; actual hotloads of model_450.pt, model_460.pt, model_470.pt observed.
-- [ ] Evaluate unassisted recovery from supine/prone/side starts; report success separately from smoke completion.
+- [x] Evaluate the initial absolute-action model_1200: 0/24 held supine recoveries without assistance. Record this failure.
+- [ ] Evaluate corrected relative-action checkpoints; prone/side success remains unverified.
 - [x] Commit source on the requested branch with the supplied author email.
 - [ ] Push branch/open PR: requires GitHub device-login approval; no stored credentials were present.
 

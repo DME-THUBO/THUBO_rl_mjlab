@@ -20,6 +20,7 @@ joint names, source hash, modeled mass and random-pose FK comparisons.
   weighted clipped PPO, timeout bootstrapping and atomic native `.pt` saves.
 - `scripts/host_train.py`: CUDA smoke/training/resume entry point.
 - `scripts/host_viser.py`: inference viewer and latest-checkpoint hotload.
+- `scripts/host_eval.py`: explicitly unassisted held-recovery evaluation per action scale/pose.
 
 ## Reproduce
 
@@ -31,6 +32,7 @@ python scripts/host_train.py --robot pi --smoke
 python scripts/host_train.py --robot thubo --smoke
 python scripts/host_train.py --robot thubo --num-envs 256 --iterations 2000 --run-dir logs/host_getup/thubo_recovery
 python scripts/host_viser.py logs/host_getup/thubo_recovery --port 8080
+python scripts/host_eval.py logs/host_getup/thubo_recovery/model_1999.pt
 ```
 
 Default reset is supine, matching the released Pi ground task. Explicitly select
@@ -52,13 +54,24 @@ profiles, not measured THUBO continuous-duty ratings.
 
 THUBO has no head or arms: root-to-foot height replaces HoST's head keyframe.
 Robot-normalized stage thresholds and fractional body-weight assistance replace
-Pi-specific dimensional constants. The action is bounded and applied around
-the nominal pose, rather than the upstream current-joint-position target.
+Pi-specific dimensional constants. The default `relative` mode uses MJLab's
+RelativeJointPositionActionCfg: target = current joint position + scaled action,
+recomputed at every physics substep, matching the upstream control convention.
+Actions remain tanh-bounded; this differs from upstream action clipping.
+The force curriculum advances on the terminal upright height, rather than a
+transient peak. The earlier `absolute` experiment is retained only for replay:
+checkpoints without action_mode metadata are interpreted as absolute, and the
+viewer refuses hotloads across incompatible action conventions.
 The six 43-element observation frames are otherwise kept in time-major order.
 Current regularization/style rewards are explicit in `mdp.py`; not every
 robot-specific Pi ankle keyframe penalty is reproduced. Domain randomization,
 sensor noise parity and exhaustive upstream reward-by-reward parity remain
 future validation items. Existing velocity tasks and old launchers are unchanged.
+
+An early absolute-action checkpoint (iteration 1200) failed all 24 unassisted
+supine evaluations: 8 seeds at each action scale 1.0, 0.5, 0.25, 10-second horizon,
+0.5-second held-standing criterion. This result does not evaluate the corrected
+relative controller. Do not use the earlier run as a successful recovery policy.
 
 Do not treat smoke-test checkpoints, assisted lifting, or a training process
 running on CUDA as proof of unassisted recovery. Evaluate supine/prone/side starts

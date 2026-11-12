@@ -18,18 +18,24 @@ def state(env):
         env._host = dict(assist=torch.full((env.num_envs,),.6,device=env.device),
             scale=torch.ones(env.num_envs,device=env.device),
             best=torch.zeros(env.num_envs,device=env.device),
+            last_height=torch.zeros(env.num_envs,device=env.device),
+            last_upright=torch.zeros(env.num_envs,device=env.device),
             groups=torch.zeros(env.num_envs,4,device=env.device))
     return env._host
 
-def reset_recovery(env,env_ids, height=.39, reset_height=.12, poses=("supine",)):
+def reset_recovery(env,env_ids, height=.39, reset_height=.12, poses=("supine",),curriculum_mode='terminal'):
     ids = torch.arange(env.num_envs,device=env.device) if env_ids is None else env_ids
     s=state(env)
     # Update only completed episodes; initial state cannot advance the curriculum.
     complete=env.episode_length_buf[ids]>0
-    passed=(s["best"][ids]>.95*height)&complete
+    if curriculum_mode=='terminal':
+        passed=(s['last_height'][ids]>.95*height)&(s['last_upright'][ids]>.9)&complete
+    else:
+        passed=(s["best"][ids]>.95*height)&complete
     s["assist"][ids]=(s["assist"][ids]-.05*passed).clamp_min(0)
     s["scale"][ids]=(s["scale"][ids]-.02*passed).clamp_min(.25)
     s["best"][ids]=0
+    s['last_height'][ids]=0;s['last_upright'][ids]=0
     robot=env.scene["robot"]
     n=len(ids);choice=torch.randint(len(poses),(n,),device=env.device)
     roll=torch.zeros(n,device=env.device);pitch=roll.clone()
@@ -64,6 +70,7 @@ def grouped_reward(env,height=.39,feet=("left_ankle_roll","right_ankle_roll")):
     z=r.data.root_link_pos_w[:,2]-env.scene.env_origins[:,2]
     upright=-r.data.projected_gravity_b[:,2]
     s["best"]=torch.maximum(s["best"],z)
+    s['last_height']=z.clone();s['last_upright']=upright.clone()
     fids,_=r.find_bodies(feet)
     foot=r.data.body_link_pos_w[:,fids]
     clearance=z-foot[:,:,2].mean(-1)+env.scene.env_origins[:,2]

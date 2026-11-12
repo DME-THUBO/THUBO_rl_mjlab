@@ -22,7 +22,8 @@ def main():
     path=latest()
     if path is None: raise FileNotFoundError('No atomic model_*.pt checkpoint available')
     policy,ckpt=load(path,a.device)
-    cfg=recovery_cfg(ckpt['robot'],play=True);cfg.scene.num_envs=1
+    action_mode=ckpt['metadata'].get('action_mode','absolute')
+    cfg=recovery_cfg(ckpt['robot'],play=True,action_mode=action_mode);cfg.scene.num_envs=1
     env=ManagerBasedRlEnv(cfg=cfg,device=a.device)
     current=path;last_poll=0.
     def infer(obs):
@@ -30,11 +31,16 @@ def main():
         if time.monotonic()-last_poll>2:
             candidate=latest();last_poll=time.monotonic()
             if candidate and candidate!=current:
-                new,_=load(candidate,a.device);policy=new;current=candidate
+                new,data=load(candidate,a.device)
+                if data['metadata'].get('action_mode','absolute')!=action_mode:
+                    raise ValueError('Cannot hotload a different action convention into this environment')
+                policy=new;current=candidate
+                state(env)['scale'].fill_(data['metadata'].get('action_scale',1.))
                 with (a.run_dir/'hotload.jsonl').open('a') as out:
                     out.write(__import__('json').dumps(dict(checkpoint=candidate.name,time=time.time()))+'\n')
                 print('Hotloaded '+candidate.name,flush=True)
         if not a.assist: state(env)['assist'].zero_()
+        if current==path: state(env)['scale'].fill_(ckpt['metadata'].get('action_scale',1.))
         with torch.no_grad(): return policy.inference(obs['actor'],state(env)['scale'])
     try:
         server=viser.ViserServer(host='127.0.0.1',port=a.port)
