@@ -22,7 +22,7 @@ def main():
     warp.config.kernel_cache_dir=str(ROOT/'logs/warp_cache')
     from mjlab.envs import ManagerBasedRlEnv
     from src.tasks.HoST_getUp.config import recovery_cfg
-    from src.tasks.HoST_getUp import mdp
+    from dme_thubo import mdp
     from src.tasks.HoST_getUp.ppo import Policy,advantages,update,save,load
     if a.device.startswith('cuda') and not torch.cuda.is_available():
         raise RuntimeError('CUDA unavailable; refusing to silently run the training on CPU')
@@ -37,7 +37,7 @@ def main():
     run=a.run_dir or ROOT/'logs/host_getup'/f'{a.robot}_{time.strftime("%Y%m%d_%H%M%S")}'
     run.mkdir(parents=True,exist_ok=True)
     metadata=dict(robot=a.robot,device=a.device,smoke=a.smoke,seed=42,
-        group_weights=mdp.GROUP_WEIGHTS,poses=os.environ.get('HOST_POSES','supine'),
+        group_weights=mdp.HOST_GROUP_WEIGHTS,poses=os.environ.get('HOST_POSES','supine'),
         action_mode=action_mode,
         success_verified=False,num_envs=a.num_envs,environment='mjlab',assistance='curriculum, not evaluation')
     try:
@@ -54,9 +54,9 @@ def main():
                 rollout=[[] for _ in range(8)]
                 for _ in range(a.steps):
                     with torch.no_grad(): raw,lp,v=policy.act(x)
-                    control=torch.tanh(raw)*mdp.state(env)['scale'][:,None]
+                    control=torch.tanh(raw)*mdp.host_state(env)['scale'][:,None]
                     nxt,_,term,tout,_=env.step(control)
-                    groups=mdp.state(env)['groups'].clone()
+                    groups=mdp.host_state(env)['groups'].clone()
                     with torch.no_grad(): nv=policy.critic(nxt['actor'])
                     done=term|tout
                     for target,value in zip(rollout,(x,raw,lp,v,groups,nv,term,done)):
@@ -69,8 +69,8 @@ def main():
                 adv,ret=advantages(R,V,N,T,D)
                 loss=update(policy,opt,(O,A,L,adv,ret),epochs=1 if a.smoke else 5)
                 row=dict(iteration=iteration,loss=loss,group_rewards=R.mean((0,1)).tolist(),
-                    assistance=float(mdp.state(env)['assist'].mean()),
-                    action_scale=float(mdp.state(env)['scale'].mean()),
+                    assistance=float(mdp.host_state(env)['assist'].mean()),
+                    action_scale=float(mdp.host_state(env)['scale'].mean()),
                     simulated_transitions=(iteration+1)*a.steps*a.num_envs)
                 log.write(json.dumps(row)+'\n');print(json.dumps(row),flush=True)
                 if iteration%a.save_interval==0 or iteration==start+a.iterations-1:

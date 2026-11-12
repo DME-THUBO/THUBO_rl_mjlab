@@ -10,7 +10,7 @@ from mjlab.tasks.registry import register_mjlab_task
 from dme_thubo.env_cfg import dme_thubo_standing_env_cfg
 from dme_thubo.rl_cfg import dme_thubo_ppo_runner_cfg
 from .robots import robot_cfg
-from . import mdp
+from dme_thubo import mdp
 
 def recovery_cfg(robot="thubo",play=False,action_mode=None):
     cfg=dme_thubo_standing_env_cfg(play=play,terrain="flat")
@@ -26,19 +26,19 @@ def recovery_cfg(robot="thubo",play=False,action_mode=None):
         cfg.actions["joint_pos"].scale=2.5
     else:
         raise ValueError(action_mode)
-    cfg.observations={n:ObservationGroupCfg(terms={"proprio":ObservationTermCfg(func=mdp.proprioception)},
+    cfg.observations={n:ObservationGroupCfg(terms={"proprio":ObservationTermCfg(func=mdp.host_proprioception)},
         history_length=6,enable_corruption=False) for n in ("actor","critic")}
     cfg.events={"default":EventTermCfg(func=base_mdp.reset_scene_to_default,mode="reset"),
-        "reset_fallen_pose":EventTermCfg(func=mdp.reset_recovery,mode="reset",
+        "reset_fallen_pose":EventTermCfg(func=mdp.reset_host_recovery,mode="reset",
             params={"height":meta["height"],"reset_height":meta["reset_height"],
                     "curriculum_mode":"terminal" if action_mode=='relative' else 'peak',
                     "poses":tuple(os.environ.get("HOST_POSES","supine").split(","))}),
-        "assistance":EventTermCfg(func=mdp.apply_assistance,mode="step",
+        "assistance":EventTermCfg(func=mdp.apply_host_assistance,mode="step",
             params={"base":meta["base"],"mass":meta["mass"] or 6.})}
-    cfg.rewards={"host_groups":RewardTermCfg(func=mdp.grouped_reward,weight=1.,
+    cfg.rewards={"host_groups":RewardTermCfg(func=mdp.host_grouped_reward,weight=1.,
         params={"height":meta["height"],"feet":meta["feet"]})}
     cfg.terminations={"time_out":TerminationTermCfg(func=base_mdp.time_out,time_out=True),
-                      "nonfinite":TerminationTermCfg(func=mdp.nonfinite)}
+                      "nonfinite":TerminationTermCfg(func=mdp.host_nonfinite)}
     cfg.episode_length_s=10.
     return cfg
 

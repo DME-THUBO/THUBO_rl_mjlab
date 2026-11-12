@@ -8,7 +8,7 @@ import os
 import torch
 from torch import nn
 from torch.distributions import Normal
-from .mdp import GROUP_WEIGHTS
+from dme_thubo.mdp import HOST_GROUP_WEIGHTS
 
 class Policy(nn.Module):
     def __init__(self,observations=258,actions=12,hidden=256):
@@ -38,7 +38,7 @@ def advantages(rewards,values,next_values,terminated,done,gamma=.99,lam=.95):
 def update(policy,optimizer,batch,epochs=5,minibatches=4):
     obs,raw,oldlog,adv,returns=batch
     adv=(adv-adv.mean((0,1),keepdim=True))/(adv.std((0,1),keepdim=True)+1e-8)
-    weighted=(adv*torch.tensor(GROUP_WEIGHTS,device=adv.device)).sum(-1)
+    weighted=(adv*torch.tensor(HOST_GROUP_WEIGHTS,device=adv.device)).sum(-1)
     obs=obs.flatten(0,1);raw=raw.flatten(0,1);oldlog=oldlog.flatten()
     weighted=weighted.flatten();returns=returns.flatten(0,1)
     stats=[]

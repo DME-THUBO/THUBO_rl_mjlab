@@ -45,7 +45,7 @@ def run_host_viewer(args: argparse.Namespace) -> None:
     from mjlab.envs import ManagerBasedRlEnv
     from mjlab.viewer import ViserPlayViewer
     from src.tasks.HoST_getUp.config import recovery_cfg
-    from src.tasks.HoST_getUp.mdp import state
+    from dme_thubo.mdp import host_state
     from src.tasks.HoST_getUp.ppo import load
 
     def latest():
@@ -82,10 +82,10 @@ def run_host_viewer(args: argparse.Namespace) -> None:
                     output.write(json.dumps(dict(checkpoint=candidate.name, time=time.time())) + "\n")
                 print(f"Hotloaded {candidate.name}", flush=True)
         if not args.assist:
-            state(env)["assist"].zero_()
-        state(env)["scale"].fill_(action_scale)
+            host_state(env)["assist"].zero_()
+        host_state(env)["scale"].fill_(action_scale)
         with torch.no_grad():
-            return policy.inference(obs["actor"], state(env)["scale"])
+            return policy.inference(obs["actor"], host_state(env)["scale"])
 
     server = None
     try:

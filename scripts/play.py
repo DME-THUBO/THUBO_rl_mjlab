@@ -22,7 +22,7 @@ def play_host(task: str, checkpoint: Path, viewer: str, device: str | None, num_
     from mjlab.utils.torch import configure_torch_backends
     from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
     from src.tasks.HoST_getUp.config import recovery_cfg
-    from src.tasks.HoST_getUp.mdp import state
+    from dme_thubo.mdp import host_state
     from src.tasks.HoST_getUp.ppo import load
 
     configure_torch_backends()
@@ -39,15 +39,15 @@ def play_host(task: str, checkpoint: Path, viewer: str, device: str | None, num_
 
     def replay_condition(env, env_ids):
         ids = slice(None) if env_ids is None else env_ids
-        state(env)["assist"][ids] = 0.0
-        state(env)["scale"][ids] = scale
+        host_state(env)["assist"][ids] = 0.0
+        host_state(env)["scale"][ids] = scale
 
     cfg.events["replay_condition"] = EventTermCfg(func=replay_condition, mode="reset")
     env = ManagerBasedRlEnv(cfg=cfg, device=device)
 
     def infer(obs):
         with torch.no_grad():
-            return policy.inference(obs["actor"], state(env)["scale"])
+            return policy.inference(obs["actor"], host_state(env)["scale"])
 
     print(f"[INFO] HoST checkpoint={checkpoint.name} environments={num_envs} "
           f"assistance=0 action_scale={scale:g} viewer={viewer}", flush=True)

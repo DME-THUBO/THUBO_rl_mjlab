@@ -21,7 +21,7 @@ def main():
     from src.tasks.HoST_getUp.config import recovery_cfg
     from src.tasks.HoST_getUp.robots import robot_cfg
     from src.tasks.HoST_getUp.ppo import load
-    from src.tasks.HoST_getUp.mdp import state
+    from dme_thubo.mdp import host_state
     policy,checkpoint=load(args.checkpoint,args.device)
     args.action_scales=args.action_scales or (checkpoint['metadata'].get('action_scale',1.),)
     _,meta=robot_cfg(checkpoint['robot'])
@@ -34,7 +34,7 @@ def main():
             cfg.events['reset_fallen_pose'].params['poses']=(pose,)
             def evaluation_condition(env,env_ids):
                 ids=slice(None) if env_ids is None else env_ids
-                state(env)['assist'][ids]=0.;state(env)['scale'][ids]=scale
+                host_state(env)['assist'][ids]=0.;host_state(env)['scale'][ids]=scale
             cfg.events['evaluation_condition']=EventTermCfg(func=evaluation_condition,mode='reset')
             env=ManagerBasedRlEnv(cfg=cfg,device=args.device)
             try:
@@ -42,7 +42,7 @@ def main():
                 hold=torch.zeros(args.num_envs,device=args.device)
                 best=torch.zeros_like(hold);finite=True
                 for _ in range(round(args.seconds/env.step_dt)):
-                    with torch.no_grad(): action=policy.inference(obs['actor'],state(env)['scale'])
+                    with torch.no_grad(): action=policy.inference(obs['actor'],host_state(env)['scale'])
                     obs,_,done,_,_=env.step(action)
                     robot=env.scene['robot']
                     z=robot.data.root_link_pos_w[:,2]-env.scene.env_origins[:,2]
