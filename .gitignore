@@ -3,3 +3,6 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 logs/
+
+/src/assets/robots/pi/pi.xml
+/src/assets/robots/pi/pi_12dof_release_v1.urdf
