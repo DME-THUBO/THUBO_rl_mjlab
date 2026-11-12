@@ -18,9 +18,11 @@ joint names, source hash, modeled mass and random-pose FK comparisons.
 - `config.py`: MJLab task registration, flat contacts, reset and step events.
 - `ppo.py`: four-value critic, per-group GAE and normalized advantages,
   weighted clipped PPO, timeout bootstrapping and atomic native `.pt` saves.
-- `scripts/host_train.py`: CUDA smoke/training/resume entry point.
-- `scripts/host_viser.py`: inference viewer and latest-checkpoint hotload.
-- `scripts/host_eval.py`: explicitly unassisted held-recovery evaluation per action scale/pose.
+- `scripts/host/train.py`: CUDA smoke/training/resume entry point.
+- `scripts/train_with_viser.py`: combined training launcher and native HoST viewer with latest-checkpoint hotload (four viewer environments by default).
+- `scripts/host/checks.py`: grouped GAE and checkpoint validation.
+- `scripts/host/convert_pi.py`: upstream Pi URDF conversion.
+- `scripts/host/eval.py`: explicitly unassisted held-recovery evaluation per action scale/pose.
 
 ## Reproduce
 
@@ -28,12 +30,20 @@ joint names, source hash, modeled mass and random-pose FK comparisons.
 conda env create -f environment-host.yml
 conda activate THUBO_mjlab
 python scripts/validate_model.py
-python scripts/host_train.py --robot pi --smoke
-python scripts/host_train.py --robot thubo --smoke
-python scripts/host_train.py --robot thubo --num-envs 256 --iterations 2000 --run-dir logs/host_getup/thubo_recovery
-python scripts/host_viser.py logs/host_getup/thubo_recovery --port 8080
-python scripts/host_eval.py logs/host_getup/thubo_recovery/model_1999.pt
+python scripts/host/train.py --robot pi --smoke
+python scripts/host/train.py --robot thubo --smoke
+python scripts/host/train.py --robot thubo --num-envs 256 --iterations 2000 --run-dir logs/host_getup/thubo_recovery
+python scripts/train_with_viser.py --viewer-only logs/host_getup/thubo_recovery --device cpu --viewer-num-envs 4 --viser-port 8080
+python scripts/host/eval.py logs/host_getup/thubo_recovery/model_1999.pt
+# Launch training and a separate CPU hotloading viewer together:
+python scripts/train_with_viser.py HoST-GetUp-THUBO --num-envs 2048 --iterations 4000 --viewer-num-envs 4 --save-interval 25
 ```
+
+HoST utilities live under `scripts/host/`. The former `scripts/host_viser.py`
+is merged into `scripts/train_with_viser.py`; `--viewer-only RUN_DIR` preserves
+standalone playback. Training and viewing remain separate processes. Viewer
+environment count is independent of training count; all four viewer environments
+use HoST recovery resets (supine by default).
 
 Default reset is supine, matching the released Pi ground task. Explicitly select
 other starts with `HOST_POSES=supine,prone,left,right`; convergence for additional

@@ -1,7 +1,7 @@
 """Measure held, unassisted recovery; report each pose/action-scale separately."""
 from pathlib import Path
 import sys,argparse,json
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
+ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT))
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)

@@ -1,7 +1,7 @@
 """Check grouped timeout GAE and checkpoint round trips without training."""
 from pathlib import Path
 import sys,tempfile,json
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
+ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT))
 import torch
 from src.tasks.HoST_getUp.ppo import Policy,advantages,save,load
 

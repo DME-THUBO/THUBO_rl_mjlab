@@ -3,7 +3,7 @@ from pathlib import Path
 import sys,shutil,json,hashlib,xml.etree.ElementTree as ET
 import mujoco
 import numpy as np
-ROOT=Path(__file__).resolve().parents[1]
+ROOT=Path(__file__).resolve().parents[2]
 
 def main():
     source=Path(sys.argv[1]).resolve()

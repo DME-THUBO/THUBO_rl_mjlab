@@ -1,7 +1,7 @@
 """Train or smoke-test the HoST recovery port on either 12-DoF embodiment."""
 from pathlib import Path
 import sys,os,argparse,json,time
-ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
+ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT))
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
