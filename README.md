@@ -69,6 +69,13 @@ retain the `absolute` compatibility rule. Different action modes cannot be hotlo
 Short training proves runnable execution, not successful unassisted recovery.
 Acceptance requires separate zero-assistance, sustained-standing evaluation per pose.
 
+## TensorBoard
+
+```bash
+./.venv/bin/tensorboard --logdir logs/rsl_rl/dme_thubo_flat_velocity \
+  --host 127.0.0.1 --port 6006
+```
+
 ## Optional Pi assets
 
 `src/assets/robots/pi/pi.xml` and `pi_12dof_release_v1.urdf` are locally generated,

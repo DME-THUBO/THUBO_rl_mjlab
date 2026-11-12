@@ -154,7 +154,7 @@ def main() -> None:
         ]
     training = subprocess.Popen(train_cmd, cwd=ROOT, env=env)
     viewer: subprocess.Popen | None = None
-    run_root = log_root / "dme_thubo_rough_velocity"
+    run_root = log_root / "dme_thubo_flat_velocity"
     run_dir = host_run_dir if is_host else None
     print(f"[INFO] Training PID: {training.pid}", flush=True)
     print(
