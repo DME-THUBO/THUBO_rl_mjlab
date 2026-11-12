@@ -94,6 +94,12 @@ def main() -> None:
                     str(args.viser_port),
                     "--device",
                     "cpu" if args.device == "cuda" else args.device,
+                    # Show a mixed getup demo: envs 0-1 stand, envs 2-3 start fallen.
+                    "--num-envs",
+                    "4",
+                    "--fallen-env-ids",
+                    "2",
+                    "3",
                 ]
                 viewer_env = env.copy()
                 if args.device == "cuda":

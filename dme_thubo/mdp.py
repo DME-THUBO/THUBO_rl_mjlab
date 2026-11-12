@@ -1,7 +1,8 @@
 """Standing-task terms kept small and explicit for the first PPO milestone."""
 
 import torch
-from mjlab.utils.lab_api.math import quat_apply_inverse
+from mjlab.managers.scene_entity_config import SceneEntityCfg
+from mjlab.utils.lab_api.math import quat_apply_inverse, quat_from_euler_xyz
 
 
 def terrain_curriculum(env, env_ids):
@@ -178,3 +179,109 @@ def joint_position_penalty(env):
     default = robot.data.default_joint_pos
     assert default is not None
     return torch.sum(torch.square(robot.data.joint_pos - default), dim=1)
+
+
+def reset_fallen_pose(
+    env,
+    env_ids,
+    ratio: float = 0.4,
+    fallen_env_ids: tuple[int, ...] | None = None,
+    root_height: float = 0.12,
+    root_height_jitter: float = 0.02,
+    joint_jitter: float = 0.25,
+    asset_cfg: SceneEntityCfg = SceneEntityCfg("robot"),
+):
+    """Drop a random subset of resetting envs into a supine lying pose.
+
+    The pose is face-up (pitch=-pi/2) with random yaw and small roll/pitch
+    jitter, zero velocities, and default joints offset by a bounded jitter.
+    Register after ``reset_scene_to_default`` so it only overrides the picked
+    subset of envs.
+
+    When ``fallen_env_ids`` is given it pins exactly those env indices to the
+    fallen pose on every reset (deterministic split for viewers); otherwise a
+    Bernoulli draw with ``ratio`` picks the fallen subset.
+    """
+    if env_ids is None:
+        env_ids = torch.arange(env.num_envs, device=env.device)
+    if fallen_env_ids is not None:
+        pinned = torch.as_tensor(fallen_env_ids, device=env.device)
+        pick = torch.isin(env_ids, pinned)
+    else:
+        pick = torch.rand(env_ids.shape[0], device=env.device) < ratio
+    if not pick.any():
+        return
+    fallen_ids = env_ids[pick]
+    asset = env.scene[asset_cfg.name]
+    num = fallen_ids.shape[0]
+
+    roll = (torch.rand(num, device=env.device) * 2.0 - 1.0) * 0.15
+    pitch = -0.5 * torch.pi + (torch.rand(num, device=env.device) * 2.0 - 1.0) * 0.15
+    yaw = (torch.rand(num, device=env.device) * 2.0 - 1.0) * torch.pi
+    quat = quat_from_euler_xyz(roll, pitch, yaw)
+
+    root = asset.data.default_root_state[fallen_ids].clone()
+    pos = root[:, 0:3] + env.scene.env_origins[fallen_ids]
+    pos[:, 2] = (
+        root_height + (torch.rand(num, device=env.device) * 2.0 - 1.0) * root_height_jitter
+    )
+    asset.write_root_link_pose_to_sim(torch.cat([pos, quat], dim=-1), env_ids=fallen_ids)
+    asset.write_root_link_velocity_to_sim(
+        torch.zeros(num, 6, device=env.device), env_ids=fallen_ids
+    )
+
+    default_joint_pos = asset.data.default_joint_pos[fallen_ids]
+    joint_pos = default_joint_pos + (
+        torch.rand_like(default_joint_pos) * 2.0 - 1.0
+    ) * joint_jitter
+    limits = asset.data.joint_pos_limits[fallen_ids]
+    joint_pos = torch.max(torch.min(joint_pos, limits[..., 1]), limits[..., 0])
+    asset.write_joint_state_to_sim(
+        joint_pos, torch.zeros_like(joint_pos), env_ids=fallen_ids
+    )
+
+
+def getup_phase(env, z_low: float = 0.30, z_high: float = 0.36) -> torch.Tensor:
+    """Per-env hysteresis latch: True while in the getup phase.
+
+    Below ``z_low`` the env enters the getup phase, above ``z_high`` it returns
+    to the velocity-tracking phase, and in between the previous phase is kept.
+    """
+    z = env.scene["robot"].data.root_link_pos_w[:, 2]
+    if not hasattr(env, "_thubo_getup_down"):
+        env._thubo_getup_down = z < z_low
+    down = env._thubo_getup_down
+    down = (down | (z < z_low)) & ~(z > z_high)
+    env._thubo_getup_down = down
+    return down
+
+
+def gated_reward(func, *, down: bool):
+    """Gate a reward term to the getup phase (down=True) or the velocity phase.
+
+    Reward weights are global scalars, so per-env phase gating happens here as
+    a 0/1 mask following the same idiom as ``feet_clearance_swing_reward``.
+    """
+
+    def gated(env, **params):
+        is_down = getup_phase(env)
+        mask = is_down if down else ~is_down
+        if not mask.any():
+            return torch.zeros(env.num_envs, device=env.device)
+        return func(env, **params) * mask.to(torch.float32)
+
+    return gated
+
+
+def getup_root_height_reward(env, target: float = 0.39, std: float = 0.15):
+    """Shaped root-height recovery with gradient from a lying pose upward.
+
+    The L1 exponential kernel keeps a non-zero slope at low heights, unlike the
+    squared ``root_height_reward`` kernel which is flat far from the target.
+    """
+    z = env.scene["robot"].data.root_link_pos_w[:, 2]
+    return torch.exp(-torch.abs(z - target) / std)
+
+
+def root_height_observation(env) -> torch.Tensor:
+    return env.scene["robot"].data.root_link_pos_w[:, 2:3]

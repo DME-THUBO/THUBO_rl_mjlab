@@ -81,6 +81,14 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8080)
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--num-envs", type=int, default=1)
+    parser.add_argument(
+        "--fallen-env-ids",
+        type=int,
+        nargs="*",
+        default=None,
+        help="Pin these viewer env indices to the fallen reset pose (getup tasks)",
+    )
     args = parser.parse_args()
 
     configure_torch_backends()
@@ -91,7 +99,21 @@ def main() -> None:
     checkpoint_name = available[-1][0]
 
     env_cfg = load_env_cfg(args.task, play=True)
-    env_cfg.scene.num_envs = 1
+    env_cfg.scene.num_envs = args.num_envs
+    if args.fallen_env_ids:
+        fallen_term = env_cfg.events.get("reset_fallen_pose")
+        if fallen_term is None:
+            print(
+                "[WARN] --fallen-env-ids ignored: task has no 'reset_fallen_pose' event",
+                flush=True,
+            )
+        else:
+            fallen_term.params["fallen_env_ids"] = tuple(args.fallen_env_ids)
+            print(
+                f"[INFO] Envs {args.fallen_env_ids} start fallen; the other "
+                f"{args.num_envs - len(args.fallen_env_ids)} start standing",
+                flush=True,
+            )
     agent_cfg = load_rl_cfg(args.task)
     device = args.device
     env = ManagerBasedRlEnv(cfg=env_cfg, device=device)
