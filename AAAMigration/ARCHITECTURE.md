@@ -1,91 +1,47 @@
-# DME-THUBO architecture
-
-This repository follows the ManagerBased RL organization used by the upstream
-[Unitree RL MJLab project](https://github.com/unitreerobotics/unitree_rl_mjlab).
-The upstream repository is the layout reference; its Unitree robot assets and
-deployment code are not copied into this project.
-
-The active scope is simulation training with MJLab, MuJoCo Warp, and PPO/RSL-RL.
-The source model remains the checked-in THUBO MJCF and STL set.
-
-## Runtime flow
+# THUBO configuration ownership
 
 ```text
-scripts/train.py
-    |
-    +--> src.tasks                 # import task registrations
-    +--> mjlab.tasks.registry      # task id -> env/agent config
-    +--> ManagerBasedRlEnv         # scene + managers
-             |
-             +--> src.assets.robots.thubo
-             |       +--> MJCF and STL meshes
-             |       +--> STS3250 position actuator parameters
-             |
-             +--> observation manager: joint state, IMU-like base state, command
-             +--> action manager: 12 normalized joint position targets
-             +--> reward manager: posture/upright/height or velocity tracking
-             +--> termination manager: fall, low root, timeout
-             +--> event manager: deterministic reset and future randomization
-             |
-             +--> MuJoCo / MuJoCo Warp
-             +--> RSL-RL PPO
+scripts/train.py or scripts/host/train.py
+    -> src/tasks/*/config.py (registration only) / dme_thubo_env_cfg
+    -> dme_thubo/env_cfg.py (fresh scene + simulation + task manager preset)
+        -> dme_thubo/embodiments.py (no task registration imports)
+            -> dme_thubo/robot.py -> mjcf/THUBO.xml + meshes/
+        -> dme_thubo/mdp.py (all custom MDP terms and environment-owned state)
+        -> upstream MJLab MDP terms
+    -> ManagerBasedRlEnv -> MuJoCo Warp
+    -> RSL-RL PPO OR src/tasks/HoST_getUp/ppo.py
 ```
 
-## Repository layout
+`dme_thubo_env_cfg` validates task/robot/terrain/action combinations, creates common
+simulation and scene configuration, installs the selected task's managers, applies
+train/play settings and returns a new instance. It never imports `src.tasks`.
+Compatibility functions only delegate to this factory. Actor and critic term
+objects and separate calls must not share mutable configuration.
+Environment variables are parsed in executable entry points, not during registration.
 
-```text
-DME-THUBO/
-├── mjcf/                         # source MuJoCo XML models
-├── meshes/                       # source STL meshes referenced by MJCF
-├── sts3250_official.json         # actuator metadata
-├── src/
-│   ├── assets/robots/thubo/      # ManagerBased robot entity adapter
-│   └── tasks/
-│       ├── standing/             # THUBO-Flat-Stand, THUBO-Rough-Stand
-│       └── velocity/             # THUBO-Flat-Velocity, THUBO-Rough-Velocity
-├── dme_thubo/                # shared model validation and task primitives
-├── scripts/train.py              # PPO entry point
-├── scripts/validate_model.py     # model-property gate
-└── AAAMigration/
-    ├── ARCHITECTURE.md
-    └── TODO.md
-```
+Presets: standing, velocity, velocity_getup, host_getup. Only flat terrain is enabled.
+Pi is an optional local HoST embodiment; THUBO works without its generated models.
+`embodiments.py` owns adapter logic; task `robots.py` is a compatibility re-export.
+The factory never constructs a standing baseline and then overrides it for velocity or HoST.
 
-`dme_thubo` owns reusable implementation details. `src/assets` and
-`src/tasks` provide the upstream-compatible package boundary and task registry
-layout. A task configuration should compose the shared standing baseline and
-change only its terrain, commands, observations, rewards, or curriculum.
+Standard actions retain default-offset targets (0.35); HoST defaults to relative
+targets, six frame-major observation frames, fallen resets and independent curricula.
+The combined task keeps its different fallen sampling and phase-gated rewards.
+Do not merge these reset functions just because both place the robot on the floor.
+HoST state is attached to each environment and provided through `host_state`.
 
-## Task progression
+The dedicated HoST runner keeps four critic values, per-group GAE and normalized
+advantages. Its checkpoint is not a standard RSL-RL file. Missing `action_mode`
+metadata means the legacy absolute controller. No checkpoint conversion is implied.
 
-### Standing first
+Sources: [Unitree RL MJLab](https://github.com/unitreerobotics/unitree_rl_mjlab)
+for velocity organization; [HoST](https://github.com/InternRobotics/HoST),
+`70bb580949a336a920833700e4b5dc3bf7fe87ce`, for recovery. Preserve
+`src/tasks/HoST_getUp/LICENSE_HoST` and Pi source metadata.
 
-`THUBO-Flat-Stand` is the deterministic acceptance task. It validates the
-12-joint position action path, reset behavior, observation shapes, root height,
-upright reward, and fall termination on a plane.
-
-`THUBO-Rough-Stand` uses MJLab's procedural rough terrain generator with the
-same action and standing objective. It is a robustness task after flat standing
-is stable.
-
-### Walking after standing
-
-`THUBO-Flat-Velocity` and `THUBO-Rough-Velocity` add a
-`UniformVelocityCommandCfg` named `twist`, a 3-element command observation, and
-linear/angular velocity tracking rewards. They are registered now so their
-configuration is reviewable, but training should begin only after the standing
-acceptance criteria in `TODO.md` pass.
-
-## Configuration ownership
-
-- Robot XML, meshes, inertial properties, and joint limits belong under `mjcf/`
-  and `meshes/`.
-- Actuator construction belongs in the THUBO robot constants adapter.
-- Scene, observation, action, reward, termination, and event managers belong in
-  task environment configs.
-- PPO network and algorithm settings belong in the task RL config.
-- Model-property validation runs before the robot entity is built and is also
-  available as a standalone command.
-
-Hardware drivers, deployment, ONNX export, and sim-to-real are outside this
-architecture milestone.
+Validation against e6331e0: frozen task configuration semantics, model checks,
+mutable-state isolation, missing-Pi import checks, reset/step and combined phase
+transitions, short training and checkpoint replay, grouped GAE and native saves.
+See README commands. Logs and checkpoints are not committed. Short runs are not
+recovery success measurements; use zero-assistance sustained-standing evaluation.
+Rough terrain height/obstacle semantics remain a separate issue.

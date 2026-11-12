@@ -2,4 +2,9 @@
 __pycache__/
 *.py[cod]
 *.egg-info/
-logs/
+logs/*
+!logs/rsl_rl/
+/AAAtmp/
+
+/src/assets/robots/pi/pi.xml
+/src/assets/robots/pi/pi_12dof_release_v1.urdf
