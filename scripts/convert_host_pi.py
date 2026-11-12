@@ -13,6 +13,7 @@ def main():
     tree=ET.parse(original);comp=tree.getroot().find('mujoco/compiler')
     comp.set('meshdir','meshes');comp.set('strippath','true');comp.set('fusestatic','false')
     tmp=dest/'pi_12dof_release_v1.urdf';tree.write(tmp,encoding='utf-8')
+    tmp.write_text('\n'.join(line.rstrip() for line in tmp.read_text(encoding='utf-8').splitlines())+'\n',encoding='utf-8')
     spec=mujoco.MjSpec.from_file(str(tmp));fixed=spec.compile()
     base=spec.body('base_link');base.add_freejoint(name='root');base.pos=[0,0,.351]
     model=spec.compile()

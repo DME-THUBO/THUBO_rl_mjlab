@@ -11,7 +11,7 @@
 		<visual>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
-				
+
 				<mesh filename="../meshes/baselink_1.STL" />
 			</geometry>
 			<material name="">
@@ -22,7 +22,7 @@
 			<origin xyz="0 0 0.08" rpy="0 0 0" />
 			<geometry>
 				<box size="0.165 0.10 0.15" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -45,7 +45,7 @@
 		<collision>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
-				
+
 				<mesh filename="../meshes/r_hip_pitch_link.STL" />
 			</geometry>
 		</collision>
@@ -76,7 +76,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.001 0.001 0.001" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -106,7 +106,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.001 0.001 0.001" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -135,10 +135,10 @@
 		<collision>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
-				
+
 				<box size="0.058 0.065 0.055" />
 
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -168,7 +168,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.078 0.08 0.05" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -252,12 +252,12 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.058 0.05 0.05" />
-				
+
 			</geometry>
 		</collision>
-		
 
-		
+
+
 
 	</link>
 	<joint name="r_ankle_roll_joint" type="revolute">
@@ -286,7 +286,7 @@
 		<collision>
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
-				
+
 				<mesh filename="../meshes/l_hip_pitch_link.STL" />
 			</geometry>
 		</collision>
@@ -317,7 +317,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.001 0.001 0.001" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -347,7 +347,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.001 0.001 0.001" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -377,7 +377,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.058 0.065 0.055" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -407,7 +407,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.078 0.08 0.05" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -491,7 +491,7 @@
 			<origin xyz="0 0 0" rpy="0 0 0" />
 			<geometry>
 				<box size="0.058 0.05 0.05" />
-				
+
 			</geometry>
 		</collision>
 	</link>
@@ -502,14 +502,14 @@
 		<axis xyz="1 0 0" />
 		<limit lower="-0.15" upper="0.15" effort="20" velocity="5" />
 	</joint>
-	 
 
-   
+
+
 	<link name="keyframe_head_link">
-		
+
 		<visual>
 			<geometry>
-			
+
 			<box size="0.01 0.01 0.01" />
 			</geometry>
 			<material name="white">
@@ -523,7 +523,7 @@
 		<child link="keyframe_head_link" />
 	</joint>
 
-	
+
 	<link name="auxiliary_r_ankle_roll_link1">
 		<visual>
 		<origin xyz="0 0 0" rpy="0 0 0" />
