@@ -24,9 +24,7 @@ The HoST runner retains grouped GAE, separate group advantage normalization and 
 | --- | --- | --- | --- |
 | `THUBO-Flat-Stand` | 42 | 12 default-offset position targets, scale 0.35; standing reset | RSL-RL |
 | `THUBO-Flat-Velocity` | 47 | same actions; twist command and gait phase | RSL-RL |
-| `THUBO-Flat-Velocity-Getup` | 48 | same actions; mixed fallen reset and stage-gated rewards | RSL-RL |
 | `HoST-GetUp-THUBO` | 43 per frame × 6 = 258 | 12 relative position actions; fallen reset and curricula | HoST PPO |
-| `HoST-GetUp-PI` (optional local assets) | 258 | robot-specific HoST adapter | HoST PPO |
 
 Default `scripts/train.py` task is `THUBO-Flat-Velocity`, 2048 environments and 4000 updates.
 `THUBO-Rough-Velocity` remains disabled. `THUBO-Rough-Stand` is not registered.
@@ -53,10 +51,11 @@ Standard training overrides: `DME_THUBO_NUM_ENVS`, `DME_THUBO_NUM_STEPS`,
 `DME_THUBO_MAX_ITERATIONS` (at most 4000), `DME_THUBO_SAVE_INTERVAL`, `DME_THUBO_RUN_NAME`, `DME_THUBO_LOG_ROOT`.
 HoST's entry point parses `HOST_ACTION_MODE` (default `relative`) and `HOST_POSES` (default `supine`) at runtime and passes them explicitly to the common factory.
 The factory and registration modules do not read environment variables.
-The legacy experiment directory name `dme_thubo_rough_velocity` is retained for checkpoint/run compatibility despite flat terrain.
+New standard training runs use the experiment directory `dme_thubo_flat_velocity`.
+Existing checkpoints under `dme_thubo_rough_velocity` can still be replayed by passing their original paths.
 
 ```bash
-python scripts/play.py THUBO-Flat-Velocity logs/rsl_rl/dme_thubo_rough_velocity/<run>/model_3999.pt --viewer viser
+python scripts/play.py THUBO-Flat-Velocity logs/rsl_rl/dme_thubo_flat_velocity/<run>/model_3999.pt --viewer viser
 python scripts/play.py HoST-GetUp-THUBO logs/host_getup/thubo_recovery/model_1999.pt --viewer viser
 python scripts/train_with_viser.py HoST-GetUp-THUBO --num-envs 256 --iterations 2000 --viewer-num-envs 4 --save-interval 25
 python scripts/train_with_viser.py --viewer-only logs/host_getup/thubo_recovery --device cpu --viser-port 8080
@@ -68,13 +67,6 @@ HoST replay uses its dedicated loader. Old HoST checkpoints without `action_mode
 retain the `absolute` compatibility rule. Different action modes cannot be hotloaded into the same viewer.
 Short training proves runnable execution, not successful unassisted recovery.
 Acceptance requires separate zero-assistance, sustained-standing evaluation per pose.
-
-## TensorBoard
-
-```bash
-./.venv/bin/tensorboard --logdir logs/rsl_rl/dme_thubo_flat_velocity \
-  --host 127.0.0.1 --port 6006
-```
 
 ## Optional Pi assets
 
