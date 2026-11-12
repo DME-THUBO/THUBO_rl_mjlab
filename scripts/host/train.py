@@ -16,12 +16,11 @@ def main():
     p.add_argument('--smoke',action='store_true')
     a=p.parse_args()
     if a.smoke: a.num_envs=4;a.iterations=2;a.steps=8;a.save_interval=1
-    os.environ['HOST_NUM_ENVS']=str(a.num_envs)
     import torch
     import warp
     warp.config.kernel_cache_dir=str(ROOT/'logs/warp_cache')
     from mjlab.envs import ManagerBasedRlEnv
-    from src.tasks.HoST_getUp.config import recovery_cfg
+    from dme_thubo.env_cfg import dme_thubo_env_cfg
     from dme_thubo import mdp
     from src.tasks.HoST_getUp.ppo import Policy,advantages,update,save,load
     if a.device.startswith('cuda') and not torch.cuda.is_available():
@@ -32,7 +31,8 @@ def main():
         header=torch.load(a.resume,map_location='cpu',weights_only=True)
         if header['robot']!=a.robot: raise ValueError('Resume embodiment does not match --robot')
         action_mode=header['metadata'].get('action_mode','absolute')
-    cfg=recovery_cfg(a.robot,action_mode=action_mode);cfg.auto_reset=False
+    cfg=dme_thubo_env_cfg(task='host_getup',robot=a.robot,action_mode=action_mode,
+        num_envs=a.num_envs,poses=tuple(os.environ.get('HOST_POSES','supine').split(',')));cfg.auto_reset=False
     env=ManagerBasedRlEnv(cfg=cfg,device=a.device)
     run=a.run_dir or ROOT/'logs/host_getup'/f'{a.robot}_{time.strftime("%Y%m%d_%H%M%S")}'
     run.mkdir(parents=True,exist_ok=True)

@@ -44,7 +44,7 @@ def run_host_viewer(args: argparse.Namespace) -> None:
     warp.config.kernel_cache_dir = str(ROOT / "logs/warp_cache")
     from mjlab.envs import ManagerBasedRlEnv
     from mjlab.viewer import ViserPlayViewer
-    from src.tasks.HoST_getUp.config import recovery_cfg
+    from dme_thubo.env_cfg import dme_thubo_env_cfg
     from dme_thubo.mdp import host_state
     from src.tasks.HoST_getUp.ppo import load
 
@@ -59,7 +59,7 @@ def run_host_viewer(args: argparse.Namespace) -> None:
     policy, checkpoint = load(current, args.device)
     action_mode = checkpoint["metadata"].get("action_mode", "absolute")
     action_scale = checkpoint["metadata"].get("action_scale", 1.0)
-    cfg = recovery_cfg(checkpoint["robot"], play=True, action_mode=action_mode)
+    cfg = dme_thubo_env_cfg(task="host_getup", robot=checkpoint["robot"], play=True, action_mode=action_mode)
     cfg.scene.num_envs = args.viewer_num_envs
     env = ManagerBasedRlEnv(cfg=cfg, device=args.device)
     last_poll = 0.0

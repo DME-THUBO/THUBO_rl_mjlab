@@ -18,8 +18,8 @@ def main():
     warp.config.kernel_cache_dir=str(ROOT/'logs/warp_cache')
     from mjlab.envs import ManagerBasedRlEnv
     from mjlab.managers.event_manager import EventTermCfg
-    from src.tasks.HoST_getUp.config import recovery_cfg
-    from src.tasks.HoST_getUp.robots import robot_cfg
+    from dme_thubo.env_cfg import dme_thubo_env_cfg
+    from dme_thubo.embodiments import robot_cfg
     from src.tasks.HoST_getUp.ppo import load
     from dme_thubo.mdp import host_state
     policy,checkpoint=load(args.checkpoint,args.device)
@@ -28,7 +28,7 @@ def main():
     rows=[]
     for scale in args.action_scales:
         for pose in args.poses:
-            cfg=recovery_cfg(checkpoint['robot'],play=True,
+            cfg=dme_thubo_env_cfg(task='host_getup',robot=checkpoint['robot'],play=True,
                 action_mode=checkpoint['metadata'].get('action_mode','absolute'))
             cfg.scene.num_envs=args.num_envs;cfg.episode_length_s=1e6;cfg.auto_reset=False
             cfg.events['reset_fallen_pose'].params['poses']=(pose,)

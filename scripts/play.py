@@ -21,7 +21,7 @@ def play_host(task: str, checkpoint: Path, viewer: str, device: str | None, num_
     from mjlab.managers.event_manager import EventTermCfg
     from mjlab.utils.torch import configure_torch_backends
     from mjlab.viewer import NativeMujocoViewer, ViserPlayViewer
-    from src.tasks.HoST_getUp.config import recovery_cfg
+    from dme_thubo.env_cfg import dme_thubo_env_cfg
     from dme_thubo.mdp import host_state
     from src.tasks.HoST_getUp.ppo import load
 
@@ -32,7 +32,7 @@ def play_host(task: str, checkpoint: Path, viewer: str, device: str | None, num_
     if task != f"HoST-GetUp-{data['robot'].upper()}":
         raise ValueError("Task does not match the HoST checkpoint embodiment")
     scale = data["metadata"].get("action_scale", 1.0)
-    cfg = recovery_cfg(data["robot"], play=True,
+    cfg = dme_thubo_env_cfg(task="host_getup", robot=data["robot"], play=True,
                        action_mode=data["metadata"].get("action_mode", "absolute"))
     cfg.scene.num_envs = num_envs
     cfg.events.pop("assistance")
