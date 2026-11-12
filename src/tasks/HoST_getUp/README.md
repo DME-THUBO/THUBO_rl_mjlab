@@ -11,11 +11,11 @@ joint names, source hash, modeled mass and random-pose FK comparisons.
 
 ## Modules
 
-- `robots.py`: separate model, body, initial-state and controller adapters.
-- `mdp.py`: recovery resets, frame-major six-step proprioceptive history,
+- `dme_thubo/embodiments.py`: pure model/controller adapters; task `robots.py` only re-exports.
+- `dme_thubo/mdp.py`: recovery resets, frame-major six-step proprioceptive history,
   multiplicative orientation/height task reward, regularization/style/target
   groups, success-dependent assistance/action-scale curricula.
-- `config.py`: MJLab task registration, flat contacts, reset and step events.
+- `config.py`: thin registration; `dme_thubo/env_cfg.py` builds the complete HoST preset.
 - `ppo.py`: four-value critic, per-group GAE and normalized advantages,
   weighted clipped PPO, timeout bootstrapping and atomic native `.pt` saves.
 - `scripts/host/train.py`: CUDA smoke/training/resume entry point.
@@ -73,10 +73,10 @@ transient peak. The earlier `absolute` experiment is retained only for replay:
 checkpoints without action_mode metadata are interpreted as absolute, and the
 viewer refuses hotloads across incompatible action conventions.
 The six 43-element observation frames are otherwise kept in time-major order.
-Current regularization/style rewards are explicit in `mdp.py`; not every
+Current regularization/style rewards are explicit in `dme_thubo/mdp.py`; not every
 robot-specific Pi ankle keyframe penalty is reproduced. Domain randomization,
 sensor noise parity and exhaustive upstream reward-by-reward parity remain
-future validation items. Existing velocity tasks and old launchers are unchanged.
+future validation items. Standing, velocity and velocity_getup share the same construction entry while retaining their distinct terms.
 
 An early absolute-action checkpoint (iteration 1200) failed all 24 unassisted
 supine evaluations: 8 seeds at each action scale 1.0, 0.5, 0.25, 10-second horizon,
@@ -86,9 +86,24 @@ relative controller. Do not use the earlier run as a successful recovery policy.
 The corrected relative-action checkpoint at iteration 460 was also evaluated:
 0/8 held supine recoveries without assistance at its recorded action scale
 0.91555, over 10 seconds. Numerical simulation was finite, but recovery acceptance
-failed. The corrected training run continues; a saved checkpoint is not proof of
+failed. This intermediate evaluation is historical; a saved checkpoint is not proof of
 standing-up success.
 
 Do not treat smoke-test checkpoints, assisted lifting, or a training process
 running on CUDA as proof of unassisted recovery. Evaluate supine/prone/side starts
 separately and report assistance, hold time, torque saturation and success rates.
+
+## Shared factory and local Pi assets
+
+All custom terms and per-environment state now have one implementation in
+`dme_thubo/mdp.py`: `host_state`, `reset_host_recovery`, `host_proprioception`,
+`host_grouped_reward`, `apply_host_assistance`, `host_nonfinite` and `HOST_GROUP_WEIGHTS`.
+The old task MDP file has been removed. `dme_thubo_env_cfg(task="host_getup", robot=...)`
+creates independent configuration instances; no registration-side environment-variable reads.
+Entry points pass action mode, poses and environment count explicitly.
+
+Pi registration is optional. Generate local ignored `pi.xml` and
+`pi_12dof_release_v1.urdf` using `scripts/host/convert_pi.py`; preserve provenance
+and licenses. Missing Pi assets do not affect THUBO; explicit Pi selection explains
+which files are missing and how to generate them. Baseline configuration parity
+uses commit `e6331e03432f1f6dbed137b9e3d0080ebb1b3d55`.

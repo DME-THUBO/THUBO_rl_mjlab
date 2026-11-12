@@ -73,8 +73,8 @@ flowchart TD
 
 ## 实现位置
 
-- [config.py](config.py)：奖励注册、10 秒回合和事件配置。
-- [mdp.py](mdp.py)：倒地重置、四组奖励、辅助力及课程递减。
+- [env_cfg.py](../../../dme_thubo/env_cfg.py)：奖励注册、10 秒回合和事件配置。
+- [mdp.py](../../../dme_thubo/mdp.py)：倒地重置、四组奖励、辅助力及课程递减。
 - [ppo.py](ppo.py)：四组 GAE、优势归一化与 PPO 更新。
 - [训练入口](../../../scripts/host/train.py)：采样、手动回合重置、迭代与 checkpoint 保存。
 - [训练与查看器入口](../../../scripts/train_with_viser.py)：四环境展示和 checkpoint 热加载。
