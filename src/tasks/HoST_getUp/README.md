@@ -73,6 +73,12 @@ supine evaluations: 8 seeds at each action scale 1.0, 0.5, 0.25, 10-second horiz
 0.5-second held-standing criterion. This result does not evaluate the corrected
 relative controller. Do not use the earlier run as a successful recovery policy.
 
+The corrected relative-action checkpoint at iteration 460 was also evaluated:
+0/8 held supine recoveries without assistance at its recorded action scale
+0.91555, over 10 seconds. Numerical simulation was finite, but recovery acceptance
+failed. The corrected training run continues; a saved checkpoint is not proof of
+standing-up success.
+
 Do not treat smoke-test checkpoints, assisted lifting, or a training process
 running on CUDA as proof of unassisted recovery. Evaluate supine/prone/side starts
 separately and report assistance, hold time, torque saturation and success rates.

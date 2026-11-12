@@ -17,7 +17,8 @@ Branch: `HoST/THUBO-mjlab-RL-recovery`.
 - [x] Start a separate corrected relative-action run; action convention is recorded in checkpoint metadata.
 - [x] Viser HTTP 200 at localhost:8080; actual hotloads of model_450.pt, model_460.pt, model_470.pt observed.
 - [x] Evaluate the initial absolute-action model_1200: 0/24 held supine recoveries without assistance. Record this failure.
-- [ ] Evaluate corrected relative-action checkpoints; prone/side success remains unverified.
+- [x] Evaluate corrected relative model_460: 0/8 held supine recoveries with no assistance, at saved action scale. This intermediate policy has NOT passed recovery acceptance.
+- [ ] Achieve held unassisted recovery; evaluate prone/side starts separately.
 - [x] Commit source on the requested branch with the supplied author email.
 - [x] Push branch/open PR after GitHub device-login approval: https://github.com/DME-THUBO/THUBO_rl_mjlab/pull/2
 
