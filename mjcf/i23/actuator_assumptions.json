@@ -1,0 +1,6 @@
+{
+  "actuator_type": "feetech-sts3250",
+  "max_torque": 1.4,
+  "provenance": "Conservative I23 simulation assumption, not motor identification or manufacturer rating",
+  "measured": false
+}

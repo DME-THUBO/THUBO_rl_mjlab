@@ -1,0 +1,79 @@
+{
+  "robot": "THUBO I23",
+  "task": "THUBO-I23-Human-Walk",
+  "algorithm": "PPO (RSL-RL / MJLab)",
+  "num_envs": 512,
+  "iterations": 4000,
+  "rollout_steps": 32,
+  "seed": 42,
+  "physics_timestep_s": 0.002,
+  "control_decimation": 10,
+  "control_hz": 50,
+  "episode_seconds": 20,
+  "command_forward_m_s": [
+    0.04,
+    0.16
+  ],
+  "command_lateral_m_s": [
+    0,
+    0
+  ],
+  "command_yaw_rad_s": [
+    -0.1,
+    0.1
+  ],
+  "gait_period_s": 1.0,
+  "swing_fraction": 0.4,
+  "foot_lift_target_m": 0.02,
+  "foot_lift_min_m": 0.008,
+  "action_scale_rad": 0.25,
+  "effort_limit_Nm": 1.4,
+  "stiffness_Nm_rad": 15.0,
+  "damping_Nm_s_rad": 0.45,
+  "armature_kg_m2": 0.002,
+  "frictionloss_Nm": 0.03,
+  "actuator_parameters_measured": false,
+  "default_root_pos_m": [
+    0.022178733878868304,
+    -0.003756091579812442,
+    0.4070133155682484
+  ],
+  "default_joint_pose_rad": {
+    "left_hip_yaw": 0,
+    "left_hip_roll": 0,
+    "left_hip_pitch": -0.2,
+    "left_knee_pitch": 0.4,
+    "left_ankle_pitch": -0.2,
+    "left_ankle_roll": 0,
+    "right_hip_yaw": 0,
+    "right_hip_roll": 0,
+    "right_hip_pitch": -0.2,
+    "right_knee_pitch": 0.4,
+    "right_ankle_pitch": -0.2,
+    "right_ankle_roll": 0
+  },
+  "learning_rate": 0.0003,
+  "epochs": 5,
+  "minibatches": 4,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "entropy": 0.005,
+  "actor_layers": [
+    256,
+    128
+  ],
+  "critic_layers": [
+    256,
+    128
+  ],
+  "checkpoint_interval": 50,
+  "external_assistance": false,
+  "motion_capture_used": false,
+  "style": "Procedural alternating gait prior plus contact, foot clearance, posture and smoothness rewards; not AMP or human motion imitation",
+  "collision_model": "I23 inertias and 13 merged visual meshes; approximate body boxes/capsules, floor and inter-leg collision enabled; same-side proxy contacts excluded",
+  "model_mass_kg": 2.9412320069403304,
+  "model_sha256": "f61387662447ae1b2856e7bb5df384031cb87c4c63c1f65b1b3a7d698feac06f",
+  "source_design_manifest_sha256": "a2e7d530757c69625a95414bf13d8d79e467ff7215d3b25a8cbef5d1d61c0d83",
+  "planned_simulated_transitions": 65536000,
+  "init_pose_type": "mild crouch, FK sole-height aligned"
+}

@@ -1,0 +1,124 @@
+{
+  "validated_on": "2026-11-13",
+  "static_checks": {
+    "model_validation": true,
+    "baseline_configurations": 10,
+    "mutable_isolation": true,
+    "pure_factory_and_optional_Pi": true,
+    "host_grouped_ppo_contracts": true
+  },
+  "runtime": {
+    "shared_runtime": {
+      "exit_code": 0,
+      "seconds": 134.1
+    },
+    "i23_native_checkpoint": {
+      "exit_code": 0,
+      "seconds": 56.0
+    },
+    "host_smoke": {
+      "exit_code": 0,
+      "seconds": 50.2
+    },
+    "host_replay": {
+      "exit_code": 0,
+      "seconds": 50.7
+    },
+    "viewer_cli": {
+      "exit_code": 0,
+      "seconds": 16.5
+    },
+    "train_viewer_cli": {
+      "exit_code": 0,
+      "seconds": 1.1
+    }
+  },
+  "viewer": {
+    "checkpoint": "model_3999.pt",
+    "native_checkpoint_loaded": true,
+    "http_status": 200,
+    "viewer_state_inside_run_directory": true,
+    "device": "cuda:0",
+    "seconds": 16.4,
+    "existing_port_8082_untouched": true
+  },
+  "i23": {
+    "model": "<PROJECT_ROOT>\\work\\THUBO_I23_publish\\mjcf\\i23\\THUBO.xml",
+    "mass_kg": 2.9412320069403304,
+    "root_height_m": 0.4070133155682484,
+    "nq": 19,
+    "nv": 18,
+    "nu": 12,
+    "joint_names": [
+      "left_hip_yaw",
+      "left_hip_roll",
+      "left_hip_pitch",
+      "left_knee_pitch",
+      "left_ankle_pitch",
+      "left_ankle_roll",
+      "right_hip_yaw",
+      "right_hip_roll",
+      "right_hip_pitch",
+      "right_knee_pitch",
+      "right_ankle_pitch",
+      "right_ankle_roll"
+    ],
+    "actuator_names": [
+      "left_hip_yaw_motor",
+      "left_hip_roll_motor",
+      "left_hip_pitch_motor",
+      "left_knee_pitch_motor",
+      "left_ankle_pitch_motor",
+      "left_ankle_roll_motor",
+      "right_hip_yaw_motor",
+      "right_hip_roll_motor",
+      "right_hip_pitch_motor",
+      "right_knee_pitch_motor",
+      "right_ankle_pitch_motor",
+      "right_ankle_roll_motor"
+    ],
+    "mesh_count": 13,
+    "checks": {
+      "free_base": true,
+      "joint_count": true,
+      "actuator_count": true,
+      "root_height_range": true,
+      "positive_mass": true,
+      "mass_range_kg": true,
+      "all_meshes_present": true,
+      "actuator_config_type": true
+    },
+    "valid": true,
+    "cuda_device": "NVIDIA GeForce RTX 5070 Ti Laptop GPU",
+    "neutral_penetrations": [],
+    "cross_leg_contact_enabled": true,
+    "rollout_steps": 100,
+    "obs_dim": 47,
+    "short_ppo_updates": 2,
+    "checkpoint_reload": true,
+    "replayed_checkpoint": "model_3999.pt",
+    "replay_steps": 16,
+    "reward_finite": true,
+    "smoke_is_not_walk_acceptance": true
+  },
+  "checkpoint": {
+    "file": "<PROJECT_ROOT>\\outputs\\THUBO_I23_WALK_TRAINING\\logs\\thubo_i23_human_walk\\2026-11-13_01-44-50_I23_forward_gait_v1\\model_3999.pt",
+    "bytes": 1120757,
+    "sha256": "003a2a9282c98869e31df648d5aadbde7cdf6642c2bc47d1567ea6063cd59eab",
+    "keys": [
+      "actor_state_dict",
+      "critic_state_dict",
+      "optimizer_state_dict",
+      "iter",
+      "infos"
+    ],
+    "iteration": 3999,
+    "tensor_count": 52,
+    "tensors_finite": true,
+    "source_commit": "60e50662d0e346c176c710bf3c3f7383120ba69c",
+    "completed_updates": 4000,
+    "simulated_transitions": 65536000,
+    "performance_verified": false
+  },
+  "performance_verified": false
+}

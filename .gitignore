@@ -8,3 +8,8 @@ logs/*
 
 /src/assets/robots/pi/pi.xml
 /src/assets/robots/pi/pi_12dof_release_v1.urdf
+
+# Local I23 validation and viewer state
+MUJOCO_LOG.TXT
+viewer_status.json
+viewer_hotload.jsonl

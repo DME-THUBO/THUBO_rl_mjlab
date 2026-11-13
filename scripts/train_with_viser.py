@@ -14,7 +14,7 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-PYTHON = ROOT / ".venv" / "bin" / "python"
+PYTHON = Path(sys.executable)
 MAX_ITERATIONS = 4000
 sys.path.insert(0, str(ROOT))
 
@@ -155,6 +155,10 @@ def main() -> None:
     training = subprocess.Popen(train_cmd, cwd=ROOT, env=env)
     viewer: subprocess.Popen | None = None
     run_root = log_root / "dme_thubo_flat_velocity"
+    if not is_host:
+        import src.tasks  # noqa: F401
+        from mjlab.tasks.registry import load_rl_cfg
+        run_root = log_root / load_rl_cfg(args.task).experiment_name
     run_dir = host_run_dir if is_host else None
     print(f"[INFO] Training PID: {training.pid}", flush=True)
     print(

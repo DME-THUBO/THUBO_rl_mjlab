@@ -310,9 +310,11 @@ def dme_thubo_env_cfg(
     Pi is supported only for HoST and requires explicitly generated local assets.
     """
     task = task.lower().replace("-", "_")
-    if task not in ("standing", "velocity", "velocity_getup", "host_getup"):
+    if task == "human_walk" and robot != "thubo_i23":
+        raise ValueError("human_walk requires the explicit I23 embodiment")
+    if task not in ("standing", "velocity", "velocity_getup", "host_getup", "human_walk"):
         raise ValueError(f"Unsupported task: {task}")
-    if robot not in ("thubo", "pi") or (robot == "pi" and task != "host_getup"):
+    if robot not in ("thubo", "thubo_i23", "pi") or (robot == "pi" and task != "host_getup"):
         raise ValueError(f"Unsupported task/robot combination: {task}/{robot}")
     if terrain != "flat":
         raise ValueError(
@@ -390,6 +392,8 @@ def dme_thubo_env_cfg(
         seed=42,
         scale_rewards_by_dt=False,
     )
+    if task == "human_walk":
+        _i23_walk_preset(cfg, play, meta)
     if task in ("velocity", "velocity_getup"):
         _velocity_preset(cfg, play)
     if task == "velocity_getup":
@@ -404,3 +408,58 @@ def dme_thubo_env_cfg(
 def dme_thubo_standing_env_cfg(*, play=False, terrain="flat"):
     """Compatibility wrapper; all construction belongs to dme_thubo_env_cfg."""
     return dme_thubo_env_cfg(task="standing", play=play, terrain=terrain)
+
+
+def _i23_walk_preset(cfg, play, meta):
+    """I23 forward walking with a procedural gait prior, not motion capture."""
+    _velocity_preset(cfg, play)
+    command = cfg.commands["twist"]
+    command.heading_command = False
+    command.ranges.heading = None
+    command.rel_standing_envs = 0.05
+    command.ranges.lin_vel_x = (0.04, 0.16)
+    command.ranges.lin_vel_y = (0.0, 0.0)
+    command.ranges.ang_vel_z = (-0.10, 0.10)
+    cfg.actions["joint_pos"].scale = 0.25
+    for group in cfg.observations.values():
+        group.terms["gait_phase"].params["period"] = 1.0
+    cfg.rewards["root_height"].params = {"target": meta["height"], "std": 0.03}
+    cfg.rewards["track_linear_velocity"].weight = 3.0
+    cfg.rewards["track_linear_velocity"].params["std"] = 0.10
+    cfg.rewards["track_angular_velocity"].weight = 0.5
+    cfg.rewards["track_angular_velocity"].params["std"] = 0.3
+    cfg.rewards["pose"].weight = 0.25
+    cfg.rewards["pose"].params["walking_threshold"] = 0.02
+    cfg.rewards["stand_still"].params["command_threshold"] = 0.02
+    cfg.rewards["action_rate"].weight = -0.03
+    cfg.rewards["feet_slide"].weight = -2.0
+    cfg.rewards["feet_slide"].params["command_threshold"] = 0.02
+    cfg.rewards["feet_slide"].params["default_offsets"] = (0.071, -0.071)
+    cfg.rewards["feet_clearance_swing"].params.update(
+        period=1.0, swing_ratio=0.4, target_height=0.02,
+        min_swing_height=0.008, clearance_tolerance=0.012,
+        command_threshold=0.02, contact_penalty=0.5,
+    )
+    cfg.rewards["gait_contact"] = RewardTermCfg(
+        func=task_mdp.i23_gait_contact, weight=1.0,
+        params={"sensor_name": "feet_contact", "period": 1.0, "swing_ratio": 0.4},
+    )
+    cfg.rewards["gait_reference"] = RewardTermCfg(
+        func=task_mdp.i23_gait_reference, weight=0.4,
+        params={"period": 1.0},
+    )
+    cfg.rewards["body_sway"] = RewardTermCfg(
+        func=task_mdp.i23_body_sway, weight=-0.15,
+    )
+    feet = SceneEntityCfg("robot", body_names=("left_ankle_roll", "right_ankle_roll"))
+    cfg.rewards["contact_slide"] = RewardTermCfg(
+        func=task_mdp.i23_contact_slide, weight=-2.0, params={"asset_cfg": deepcopy(feet)},
+    )
+    cfg.terminations["feet_crossed"] = TerminationTermCfg(
+        func=task_mdp.i23_feet_crossed, params={"asset_cfg": feet, "minimum_width": 0.09},
+    )
+    cfg.terminations["low_root"].params["minimum_height"] = 0.26
+    cfg.terminations["fell"].params["limit_angle"] = 0.65
+    cfg.episode_length_s = 20.0
+    cfg.sim.nconmax = 128
+    cfg.sim.njmax = 512
