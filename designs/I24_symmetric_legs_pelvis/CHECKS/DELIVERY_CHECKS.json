@@ -1,0 +1,193 @@
+{
+  "revision": "I24",
+  "date": "2026-11-13",
+  "board": "Orange Pi 5 RK3588S original",
+  "material": "PLA",
+  "new_unique_STL": 11,
+  "new_print_instances": 13,
+  "reused_unchanged_feet": 2,
+  "optional_fit_coupons": 2,
+  "A1_plates_main": 11,
+  "A1_plates_optional": 2,
+  "estimated_main_material_g": 1162.79,
+  "estimated_main_seconds": 273795,
+  "STL_final_checks": [
+    {
+      "file": "STL_NEW/L1_frame.stl",
+      "sha256": "715d68ce4e04f8e64162bc4e8e7cf1e7c3c8f26739642bb5761960b0cf002ef9",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        84.5999984741211,
+        120.0999984741211,
+        59.999999999999986
+      ]
+    },
+    {
+      "file": "STL_NEW/R1_frame.stl",
+      "sha256": "c7df7fd7d116ef08ba70124a1125d9f60cf85b055a1f6a7f12daf0d4ee7eb890",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        84.5999984741211,
+        120.0999984741211,
+        60.0
+      ]
+    },
+    {
+      "file": "STL_NEW/L2_frame.stl",
+      "sha256": "b57907210eb93993429c88429fc46941879592a4a343d4aa9c983e07d4acbf27",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        134.8000030517578,
+        71.30000305175781,
+        56.599998474121094
+      ]
+    },
+    {
+      "file": "STL_NEW/R2_frame.stl",
+      "sha256": "c8f0f40626d727af09410841247401a7a7173a9fad90e9480a7d51ecd7b548d7",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        134.8000030517578,
+        71.30000305175781,
+        56.599998474121094
+      ]
+    },
+    {
+      "file": "STL_NEW/L34_common_frame.stl",
+      "sha256": "08cbcd7ec85c70de96e6449c03b004cc40d4b8bf5c959e10e5dd72181a3ec867",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        159.8000030517578,
+        53.099998474121094,
+        50.0
+      ]
+    },
+    {
+      "file": "STL_NEW/R34_common_frame.stl",
+      "sha256": "71ee4992d9d4d4a6e2649602c7cb5c2dd0c7e176ade06184064d60952cfc3ccc",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        159.8000030517578,
+        53.09999847412108,
+        50.0
+      ]
+    },
+    {
+      "file": "STL_NEW/L5_frame.stl",
+      "sha256": "db8b133644259eaebf31d5d37e17e940d0567a9b33882b95ebedb8c5aad5d14e",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        134.8000030517578,
+        56.599998474121094,
+        44.0
+      ]
+    },
+    {
+      "file": "STL_NEW/R5_frame.stl",
+      "sha256": "64902fe03f09f7a74ca4873109a3308fc50d0e84b8f864a93ee427bb541bcfe3",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        134.8000030517578,
+        56.59999847412108,
+        44.0
+      ]
+    },
+    {
+      "file": "STL_NEW/P0_pelvis_structure.stl",
+      "sha256": "8e460d84a53eec779f7bb7fffd55380a74665ecb6b48b179bf59a4f168a129df",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        68.49999990000003,
+        169.9999999,
+        141.9999999
+      ]
+    },
+    {
+      "file": "STL_NEW/B1_OrangePi5_tray.stl",
+      "sha256": "68b7ff3530b9552c90edc898e9f0765abe277ceb9c83013584630d51e1d0cd1a",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        140.0,
+        168.0,
+        4.0
+      ]
+    },
+    {
+      "file": "STL_NEW/N1_front_nameplate.stl",
+      "sha256": "e0c9671135d1f73cf920c45f9d047d1ce38239a004dbbe9128ab076334e8d7c1",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        31.999999900000034,
+        147.9999999,
+        4.0
+      ]
+    },
+    {
+      "file": "STL_REUSED/L6_integrated_frame.stl",
+      "sha256": "820ae3f8cba02f068b647ee4e5c110e7113d7bf9af4a361a9ed035fad3dcb920",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        159.9999999,
+        87.9999999,
+        74.30000305175781
+      ]
+    },
+    {
+      "file": "STL_REUSED/R6_integrated_frame.stl",
+      "sha256": "17bc6ef4cb0d67600a201c91a02a174024b9f6315485031d7cb1c5fcc1a178ff",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        159.9999999,
+        87.9999999,
+        74.30000305175781
+      ]
+    },
+    {
+      "file": "FIT_FIRST/F7_Rear_Motor_Seat_6mm.stl",
+      "sha256": "309fa33d0a36d6182b7aa3adfe92fcb8f5e059d45c29d181eeb9fb4fb5086eb4",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        59.5,
+        44.0,
+        35.79999923706055
+      ]
+    },
+    {
+      "file": "FIT_FIRST/F8_OrangePi5_Hole_Gauge.stl",
+      "sha256": "e92e068ab442b4307f5c4f34b1815318c4e1fd12c7eba409123ef68e2d65efc1",
+      "single_closed_positive_volume": true,
+      "bounds_mm": [
+        100.0,
+        61.79999923706055,
+        2.0
+      ]
+    }
+  ],
+  "foot_bytes_match_I23": true,
+  "assembly_STEP_bytes": 102904672,
+  "assembly_STEP_sha256": "8ce1fc2be32b389a30654a3fb0ca4f6a219922a835cc2d0089c3b05be216947a",
+  "all_motion_CAD_hashes_current": true,
+  "neutral_intersections_over_0p01mm3": 0,
+  "local_joint_sample_total": 108,
+  "local_joint_groups": 12,
+  "whole_body_poses": 6,
+  "sampled_motion_intersections_over_0p01mm3": 0,
+  "mirror_max_volume_difference_mm3": 8.731149137020111e-11,
+  "case_mount_stations": 12,
+  "rear_screw_corridors": 48,
+  "horn_driver_corridors": 48,
+  "board_mount_pitch_mm": [
+    93.855,
+    55.89
+  ],
+  "standoff_height_mm": 12,
+  "lowest_reference_component_to_tray_gap_mm": 7.1,
+  "manufactured": false,
+  "physical_strength_verified": false,
+  "continuous_motion_verified": false,
+  "full_harness_verified": false,
+  "I24_training_performed": false,
+  "notes": "CAD samples and slicer preparation only. Individual receiving-print tool access; assemble motor cases before output forks/tray. Actual motor model/thread/depth and physical PLA performance require fit testing.",
+  "nominal_lower_M2_hole_to_connector_window_web_mm": 1.5154534467603078,
+  "assembly_STEP_roundtrip_solids": 311
+}

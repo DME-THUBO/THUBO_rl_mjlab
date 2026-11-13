@@ -1,0 +1,8 @@
+{
+  "assembly_file": "CAD/THUBO_I24_PRINTED_ASSEMBLY.step",
+  "solids": 15,
+  "roundtrip_import": true,
+  "scope": "Printed parts only; original full local reference assembly results remain under CHECKS/assembly_roundtrip.json",
+  "runtime_model_replaced": false,
+  "development_status": "archived_pending_new_funding_and_servos"
+}

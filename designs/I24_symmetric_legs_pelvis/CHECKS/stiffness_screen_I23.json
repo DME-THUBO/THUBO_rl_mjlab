@@ -1,0 +1,78 @@
+{
+  "pitch_mm": 2.0,
+  "cells": 5432,
+  "nodes": 7806,
+  "dof": 23418,
+  "removed_isolated_cells": 0,
+  "volume_mm3": 43456.0,
+  "fixed_contact_face_mm2": 240.0,
+  "end_area_mm2": 236.0,
+  "load_centroid_mm": [
+    4.500000000000002,
+    1.4999999999999998,
+    -78.0
+  ],
+  "min_max_weight_factor_vs_uniform": [
+    0.8991115363099804,
+    1.1299623694650234
+  ],
+  "cases": [
+    {
+      "direction": "fore_aft_X",
+      "total_force_N": 12.5,
+      "mean_cut_displacement_along_force_mm": 0.18147840905904583,
+      "cell_center_von_mises_p95_MPa": 0.6474211840943974,
+      "cell_center_von_mises_p99_MPa": 0.9819578780326139,
+      "reaction_sum_N": [
+        -12.499999999999604,
+        -4.043526624641913e-11,
+        1.0451750576123686e-11
+      ],
+      "moment_imbalance_N_mm": [
+        -2.1652297732543957e-09,
+        1.1885958883794956e-09,
+        -1.2750973610309302e-09
+      ],
+      "relative_solver_residual": 1.476705710371113e-11
+    },
+    {
+      "direction": "wheel_axial_Y",
+      "total_force_N": 12.5,
+      "mean_cut_displacement_along_force_mm": 0.5451029440962807,
+      "cell_center_von_mises_p95_MPa": 1.0939280720446098,
+      "cell_center_von_mises_p99_MPa": 1.6066769001523677,
+      "reaction_sum_N": [
+        -9.153994229293971e-11,
+        -12.50000000073021,
+        7.849426664208181e-10
+      ],
+      "moment_imbalance_N_mm": [
+        -3.808384008152643e-08,
+        5.862592189487259e-09,
+        1.4574794704458327e-09
+      ],
+      "relative_solver_residual": 4.10927300116931e-11
+    },
+    {
+      "direction": "vertical_Z",
+      "total_force_N": -30.0,
+      "mean_cut_displacement_along_force_mm": 0.34272780557645544,
+      "cell_center_von_mises_p95_MPa": 1.373694889515895,
+      "cell_center_von_mises_p99_MPa": 1.6673707014657324,
+      "reaction_sum_N": [
+        -1.0310069464836147e-10,
+        -7.777543054032776e-10,
+        30.00000000096666
+      ],
+      "moment_imbalance_N_mm": [
+        -4.092814975820147e-08,
+        6.278526143432828e-09,
+        1.748674094415037e-09
+      ],
+      "relative_solver_residual": 1.8907874821220983e-11
+    }
+  ],
+  "revision": "I23",
+  "source_sha256": "1913297cbf813f3a3f72cd37b43ade60e403d2b0d9203cf635f71761d12a6bf6",
+  "scope": "Relative shape screen only: assumed homogeneous isotropic E=2000 MPa, nu=.35, 2mm voxel grid. Same wheel-face fixture and load-line constraints. Not printed PLA strength/fatigue, threaded-joint or motor-bearing validation."
+}

@@ -1,0 +1,344 @@
+{
+  "threshold_mm3": 0.01,
+  "local_joint_pairs": [
+    {
+      "side": "L",
+      "joint": "hip_yaw",
+      "sampled_degrees": [
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15
+      ],
+      "hits": []
+    },
+    {
+      "side": "L",
+      "joint": "hip_roll",
+      "sampled_degrees": [
+        -30,
+        -25,
+        -20,
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "hits": []
+    },
+    {
+      "side": "L",
+      "joint": "hip_pitch",
+      "sampled_degrees": [
+        -45,
+        -30,
+        -15,
+        0,
+        15,
+        30,
+        45
+      ],
+      "hits": []
+    },
+    {
+      "side": "L",
+      "joint": "knee_pitch",
+      "sampled_degrees": [
+        0,
+        15,
+        30,
+        45,
+        60,
+        75,
+        90
+      ],
+      "hits": []
+    },
+    {
+      "side": "L",
+      "joint": "ankle_pitch",
+      "sampled_degrees": [
+        -30,
+        -20,
+        -10,
+        0,
+        10,
+        20,
+        30
+      ],
+      "hits": []
+    },
+    {
+      "side": "L",
+      "joint": "ankle_roll",
+      "sampled_degrees": [
+        -30,
+        -25,
+        -20,
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "hip_yaw",
+      "sampled_degrees": [
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "hip_roll",
+      "sampled_degrees": [
+        -30,
+        -25,
+        -20,
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "hip_pitch",
+      "sampled_degrees": [
+        -45,
+        -30,
+        -15,
+        0,
+        15,
+        30,
+        45
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "knee_pitch",
+      "sampled_degrees": [
+        0,
+        15,
+        30,
+        45,
+        60,
+        75,
+        90
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "ankle_pitch",
+      "sampled_degrees": [
+        -30,
+        -20,
+        -10,
+        0,
+        10,
+        20,
+        30
+      ],
+      "hits": []
+    },
+    {
+      "side": "R",
+      "joint": "ankle_roll",
+      "sampled_degrees": [
+        -30,
+        -25,
+        -20,
+        -15,
+        -10,
+        -5,
+        0,
+        5,
+        10,
+        15,
+        20,
+        25,
+        30
+      ],
+      "hits": []
+    }
+  ],
+  "whole_body_poses": [
+    {
+      "name": "neutral",
+      "left_angles_deg": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "right_angles_deg": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    },
+    {
+      "name": "crouch",
+      "left_angles_deg": [
+        0,
+        0,
+        -15,
+        30,
+        -15,
+        0
+      ],
+      "right_angles_deg": [
+        0,
+        0,
+        15,
+        -30,
+        15,
+        0
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    },
+    {
+      "name": "left_step",
+      "left_angles_deg": [
+        0,
+        -3,
+        -20,
+        40,
+        -20,
+        3
+      ],
+      "right_angles_deg": [
+        0,
+        -2,
+        0,
+        -10,
+        10,
+        2
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    },
+    {
+      "name": "right_step",
+      "left_angles_deg": [
+        0,
+        2,
+        0,
+        10,
+        -10,
+        -2
+      ],
+      "right_angles_deg": [
+        0,
+        3,
+        20,
+        -40,
+        20,
+        -3
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    },
+    {
+      "name": "left_yaw",
+      "left_angles_deg": [
+        10,
+        0,
+        -10,
+        20,
+        -10,
+        0
+      ],
+      "right_angles_deg": [
+        0,
+        0,
+        10,
+        -20,
+        10,
+        0
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    },
+    {
+      "name": "right_yaw",
+      "left_angles_deg": [
+        0,
+        0,
+        -10,
+        20,
+        -10,
+        0
+      ],
+      "right_angles_deg": [
+        -10,
+        0,
+        10,
+        -20,
+        10,
+        0
+      ],
+      "candidate_pairs": 24,
+      "hits": []
+    }
+  ],
+  "limits": "Discrete CAD samples, not continuous collision proof or approved hardware limits",
+  "source_CAD_sha256": {
+    "L1_frame": "2a1715497e51c08ecc003f039ce27ed2cb39ee2a0660b328298621fe3b2bb459",
+    "R1_frame": "f0a2f959ca11cb45e45eadf70b5bb12bef1011e20f35696b33da5f17f33edeec",
+    "L2_frame": "e84690873ab318ae72ef2dcc3c680046714b8f44ffd9b381c36ede91bbda9644",
+    "R2_frame": "69e0e349fbc416290942c23050f8d20c1a737c6f6d5523b71ca77e09595b7743",
+    "L3_frame": "3bda86b49be3da354e3ad6bc1ae7a4b4b47fc66702b452e544979733216188e0",
+    "R3_frame": "2d6f94fe9c999be676b58e71110c98848fc1e9773718d3a048d2db29d9048402",
+    "L4_frame": "f82b37bfc15ac043bbcfc1c71cf2c737710d86ef31c307ac207ed6fc44759f29",
+    "R4_frame": "977bab35ba7ece36175cbac30ef9ab0f04286964a83ff8aae55a5361425112fc",
+    "L5_frame": "57d76f09572ca5760f3beea58abf8fe9478bcde3f67d1676770fe60e62afbcb6",
+    "R5_frame": "fa79324b7c83e414117fa462182fee4233b2d04d291756a41aa62faf65c960d3",
+    "P0_pelvis_structure": "313b72c475a428aaa962d5c98268ab07d2455415f5ef4b65f86078d6d19d9a53",
+    "B1_OrangePi5_tray": "3c7c24f41050e7ab7f4b8e9d1f931c995100ce910160ef48ba949af1153e523c",
+    "N1_front_nameplate": "1ee758851f7d1f2754c8b46dcc2225aa50894aaf49044e5301ff585467ba59c3",
+    "L6_integrated_frame": "5c44f0a1fadc730b29fafb4f47e620fc18b354a6b34ec9a0acad3077d6a69276",
+    "R6_integrated_frame": "f9923c689bd8cb0eb83abf2237ea26fc8227bbbf3f94211b87763ddf192d472d"
+  },
+  "seconds": 207.10369086265564
+}

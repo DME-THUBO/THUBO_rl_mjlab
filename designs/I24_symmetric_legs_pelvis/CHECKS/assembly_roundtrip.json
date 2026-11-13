@@ -1,0 +1,17 @@
+{
+  "file": "CAD/THUBO_I24_ASSEMBLY.step",
+  "sha256": "8ce1fc2be32b389a30654a3fb0ca4f6a219922a835cc2d0089c3b05be216947a",
+  "solids": 311,
+  "expected_solids": 311,
+  "groups": "15 prints + 12 x 13 motor solids + 40 board solids + 4 standoffs + 48 rear bolt envelopes + 48 washers",
+  "bounds_mm": [
+    -84.0000001,
+    100.0000001,
+    -115.0000001,
+    115.0000001,
+    44.0,
+    577.4000000000001
+  ],
+  "roundtrip_import": true,
+  "seconds": 61.0785927772522
+}

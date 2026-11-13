@@ -3,6 +3,10 @@
 12-DoF THUBO simulation with MJLab, MuJoCo Warp, and STL geometry from `mjcf/THUBO.xml`.
 Hardware deployment is outside this repository's current scope.
 
+## I24 body design archive
+
+This branch preserves the [I24 symmetric legs and Orange Pi 5 pelvis](designs/I24_symmetric_legs_pelvis/README.md). Ongoing policy development uses the existing body. Resume new-body development after new funding and servos are available. I24 does not replace the active MJCF or policies.
+
 ## I23 walking training — November 12–13, 2026
 
 The I23 PPO run reached 4,000 updates. [Replay instructions, settings and validation](AAAMigration/I23_training_20261112/README.md) include the Viser viewer used for policy playback. [Download trained checkpoints and run records](https://github.com/DME-THUBO/THUBO_rl_mjlab/releases/tag/i23-walk-20261112). This is a procedural gait experiment; natural human walking and hardware performance remain unverified.

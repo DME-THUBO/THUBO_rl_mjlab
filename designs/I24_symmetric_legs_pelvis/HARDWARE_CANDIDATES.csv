@@ -1,0 +1,10 @@
+﻿position,nominal_hardware,quantity,accessory,fit_condition
+Motor rear case,M2 x 8 candidate,48,M2 washer OD4.5 / ID2.2 / t0.5: 48,6mm print + 0.5mm washer gives nominal 1.5mm engagement. Verify real thread/depth using F7.
+Metal output wheel to moving print,M3 x 12 candidate,48,No OD7 washer in OD6.3 head recess,Four screws at PCD14 per motor. 10mm flange leaves nominal 2mm engagement; verify wheel threads.
+Output wheel shaft retention,M3 x 6 candidate,12,Use supplied compatible retention hardware if different,"Retains metal wheel, not a substitute for four moving-print screws. Verify actual shaft thread/depth."
+P0 to B1 tray,M3 x 12 candidate,4,M3 nut AF5.5: 4; captured pocket AF5.8,Side-load nut pockets. Confirm actual nut thickness/bolt tip.
+P0 to N1 panel,M3 x 16 candidate,4,M3 nut AF5.5: 4; captured pocket AF5.8,Install nuts before panel. Confirm bolt does not bottom out.
+Orange Pi 5 standoff,M2.5 female-female 12mm,4,OD <= 5.8mm,No printed thread; use standard insulating or suitable metal standoffs.
+Tray to standoff,M2.5 x 8 candidate,4,M2.5 washer t~0.5: 4,4mm tray; nominal 3.5mm engagement. Verify selected standoff.
+PCB to standoff,M2.5 x 6 candidate,4,Insulating M2.5 washer: 4,PCB source thickness1.2mm. Verify selected standoff and PCB keepouts.
+Harness ties,Narrow 2.5mm cable tie,12,Suggested starting quantity; actual harness-dependent,3.2mm slots. Do not squeeze connectors or bridge the rotating joint taut.

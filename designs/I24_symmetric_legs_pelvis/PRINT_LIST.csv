@@ -1,0 +1,14 @@
+﻿file,description_ko,quantity,reuse,PLA_g_plate_total,time_s_plate_total,A1_project
+STL_NEW/L1_frame.stl,왼쪽 yaw–roll 링크,1,False,76.35,18964,A1_PROJECTS/L1_frame.3mf
+STL_NEW/R1_frame.stl,오른쪽 yaw–roll 링크,1,False,75.32,19111,A1_PROJECTS/R1_frame.3mf
+STL_NEW/L2_frame.stl,왼쪽 roll–pitch 링크,1,False,91.23,21352,A1_PROJECTS/L2_frame.3mf
+STL_NEW/R2_frame.stl,오른쪽 roll–pitch 링크,1,False,91.32,21376,A1_PROJECTS/R2_frame.3mf
+STL_NEW/L34_common_frame.stl,왼쪽 허벅지·정강이 공용,2,False,179.46,44885,A1_PROJECTS/L34_common_frame.3mf
+STL_NEW/R34_common_frame.stl,오른쪽 허벅지·정강이 공용,2,False,178.3,44688,A1_PROJECTS/R34_common_frame.3mf
+STL_NEW/L5_frame.stl,왼쪽 발목 링크,1,False,65.13,15937,A1_PROJECTS/L5_frame.3mf
+STL_NEW/R5_frame.stl,오른쪽 발목 링크,1,False,65.07,15910,A1_PROJECTS/R5_frame.3mf
+STL_NEW/P0_pelvis_structure.stl,골반 구조체,1,False,246.56,54775,A1_PROJECTS/P0_pelvis_structure.3mf
+STL_NEW/B1_OrangePi5_tray.stl,Orange Pi 5 탈착 트레이,1,False,73.67,12870,A1_PROJECTS/B1_OrangePi5_tray.3mf
+STL_NEW/N1_front_nameplate.stl,전면 문구판,1,False,20.38,3927,A1_PROJECTS/N1_front_nameplate.3mf
+STL_REUSED/L6_integrated_frame.stl,기존 왼발 그대로,1,True,,,
+STL_REUSED/R6_integrated_frame.stl,기존 오른발 그대로,1,True,,,

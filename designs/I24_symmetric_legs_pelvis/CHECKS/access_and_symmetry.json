@@ -1,0 +1,675 @@
+{
+  "motor_installation": [
+    {
+      "side": "L",
+      "joint": "hip_yaw",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "hip_roll",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "hip_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "knee_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "ankle_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "ankle_roll",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_yaw",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_roll",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "knee_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "ankle_pitch",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "ankle_roll",
+      "motor_insertion_overlap_mm3": 0.0,
+      "M2": [
+        {
+          "local_yz_mm": [
+            -10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -8.3
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            -10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        },
+        {
+          "local_yz_mm": [
+            10.25,
+            -32.75
+          ],
+          "screw_and_washer_entry_overlap_mm3": 0.0,
+          "driver_overlap_mm3": 0.0
+        }
+      ]
+    }
+  ],
+  "horn_tool_access": [
+    {
+      "side": "L",
+      "joint": "hip_yaw",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "hip_roll",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "hip_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "knee_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "ankle_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "L",
+      "joint": "ankle_roll",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_yaw",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_roll",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "hip_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "knee_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "ankle_pitch",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "side": "R",
+      "joint": "ankle_roll",
+      "M3_driver_overlap_mm3": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "mirror_pairs": [
+    {
+      "pair": "L1/R1",
+      "difference_mm3": 7.275957614183426e-12
+    },
+    {
+      "pair": "L2/R2",
+      "difference_mm3": 0.0
+    },
+    {
+      "pair": "L3/R3",
+      "difference_mm3": 2.9103830456733704e-11
+    },
+    {
+      "pair": "L4/R4",
+      "difference_mm3": 2.9103830456733704e-11
+    },
+    {
+      "pair": "L5/R5",
+      "difference_mm3": 5.093170329928398e-11
+    },
+    {
+      "pair": "P0_pelvis_structure",
+      "difference_mm3": 8.731149137020111e-11
+    },
+    {
+      "pair": "B1_OrangePi5_tray",
+      "difference_mm3": 0.0
+    }
+  ],
+  "board_mount": {
+    "P0_pelvis_structure_minimum_vertical_gap_mm": 11.099999900000057,
+    "B1_OrangePi5_tray_minimum_vertical_gap_mm": 7.100000000000023,
+    "N1_front_nameplate_minimum_vertical_gap_mm": 11.099999900000057,
+    "standoffs": [
+      {
+        "xy_mm": [
+          -33.945,
+          -46.9275
+        ],
+        "possible_source_component_faces_in_standoff_footprint": 0,
+        "outer_radius_mm": 2.9,
+        "method": "Conservative actual source-face bounds; nominal substrate contact plane excluded at 0.0001 mm tolerance"
+      },
+      {
+        "xy_mm": [
+          -33.945,
+          46.9275
+        ],
+        "possible_source_component_faces_in_standoff_footprint": 0,
+        "outer_radius_mm": 2.9,
+        "method": "Conservative actual source-face bounds; nominal substrate contact plane excluded at 0.0001 mm tolerance"
+      },
+      {
+        "xy_mm": [
+          21.945,
+          -46.9275
+        ],
+        "possible_source_component_faces_in_standoff_footprint": 0,
+        "outer_radius_mm": 2.9,
+        "method": "Conservative actual source-face bounds; nominal substrate contact plane excluded at 0.0001 mm tolerance"
+      },
+      {
+        "xy_mm": [
+          21.945,
+          46.9275
+        ],
+        "possible_source_component_faces_in_standoff_footprint": 0,
+        "outer_radius_mm": 2.9,
+        "method": "Conservative actual source-face bounds; nominal substrate contact plane excluded at 0.0001 mm tolerance"
+      }
+    ],
+    "source": "https://drive.google.com/file/d/1Pdz1vAs9uQIRuEajElztSwoaFbp8kLry/view",
+    "cooler_and_extra_boards_verified": false
+  },
+  "threshold_mm3": 0.01,
+  "rear_plate_thickness_mm": 6.0,
+  "lower_hole_vertical_edge_margin_mm": 7.245454294988676,
+  "lower_hole_minimum_radial_outer_margin_mm": 6.933458798998984,
+  "assembled_full_harness_verified": false,
+  "assembly_sequence": "Mount cases before connecting output forks; install yaw cases before the removable electronics tray. Tool checks are for the individual print receiving that fastener."
+}

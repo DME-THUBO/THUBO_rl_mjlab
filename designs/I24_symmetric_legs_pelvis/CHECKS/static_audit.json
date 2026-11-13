@@ -1,0 +1,8 @@
+{
+  "assembly_parts": 27,
+  "candidate_pairs": 36,
+  "overlap_threshold_mm3": 0.01,
+  "unexpected_overlaps": [],
+  "seconds": 9.409472703933716,
+  "neutral_only": true
+}
