@@ -1,0 +1,93 @@
+{
+  "seated_motor_overlaps_mm3": [
+    {
+      "source_solid": 0,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 1,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 2,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 3,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 4,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 5,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 6,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 7,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 8,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 9,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 10,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 11,
+      "overlap_mm3": 0.0
+    },
+    {
+      "source_solid": 12,
+      "overlap_mm3": 0.0
+    }
+  ],
+  "body_insertion_envelope_overlap_mm3": 0.0,
+  "rear_boss_insertion_envelope_overlap_mm3": 0.0,
+  "connector_insertion_envelope_overlap_mm3": 0.0,
+  "screws": [
+    {
+      "hole_yz_mm": [
+        -10.25,
+        -8.3
+      ],
+      "screw_insertion_overlap_mm3": 0.0,
+      "driver_overlap_mm3": 0.0
+    },
+    {
+      "hole_yz_mm": [
+        10.25,
+        -8.3
+      ],
+      "screw_insertion_overlap_mm3": 0.0,
+      "driver_overlap_mm3": 0.0
+    },
+    {
+      "hole_yz_mm": [
+        -10.25,
+        -32.75
+      ],
+      "screw_insertion_overlap_mm3": 0.0,
+      "driver_overlap_mm3": 0.0
+    },
+    {
+      "hole_yz_mm": [
+        10.25,
+        -32.75
+      ],
+      "screw_insertion_overlap_mm3": 0.0,
+      "driver_overlap_mm3": 0.0
+    }
+  ]
+}
