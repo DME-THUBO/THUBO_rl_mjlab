@@ -3,6 +3,52 @@
 import math
 
 import torch
+
+
+def i23_gait_contact(env, sensor_name="feet_contact", period=1.0, swing_ratio=0.4):
+    """Alternating contact timing, including a double-support interval."""
+    found = env.scene[sensor_name].data.found
+    contact = found.view(found.shape[0], 2, -1).any(dim=-1)
+    phase = _gait_phase(env, period)
+    phases = torch.stack((phase, torch.remainder(phase + 0.5, 1.0)), dim=1)
+    desired = phases >= swing_ratio
+    moving = torch.linalg.vector_norm(env.command_manager.get_command("twist")[:, :2], dim=1) > 0.02
+    return (contact == desired).float().mean(dim=1) * moving.float()
+
+
+def i23_gait_reference(env, period=1.0):
+    """Analytic knee/hip rhythm only; no human dataset or AMP is used."""
+    phase = _gait_phase(env, period)
+    phases = torch.stack((phase, torch.remainder(phase + 0.5, 1.0)), dim=1)
+    wave = torch.sin(2.0 * torch.pi * phases)
+    hip = -0.20 + 0.16 * wave
+    knee = 0.40 + 0.20 * torch.clamp(wave, min=0.0)
+    ankle = -hip - knee
+    target = torch.stack((hip, knee, ankle), dim=2).reshape(env.num_envs, 6)
+    joint_pos = env.scene["robot"].data.joint_pos[:, [2, 3, 4, 8, 9, 10]]
+    error = torch.square((joint_pos - target) / 0.30).mean(dim=1)
+    moving = torch.linalg.vector_norm(env.command_manager.get_command("twist")[:, :2], dim=1) > 0.02
+    return torch.exp(-error) * moving.float()
+
+
+def i23_body_sway(env):
+    robot = env.scene["robot"]
+    return robot.data.root_link_ang_vel_b[:, :2].square().sum(dim=1)
+
+
+def i23_contact_slide(env, asset_cfg, sensor_name="feet_contact"):
+    robot = env.scene[asset_cfg.name]
+    found = env.scene[sensor_name].data.found
+    contact = found.view(found.shape[0], 2, -1).any(dim=-1)
+    horizontal_speed_sq = robot.data.body_link_lin_vel_w[:, asset_cfg.body_ids, :2].square().sum(dim=2)
+    return (horizontal_speed_sq * contact.float()).sum(dim=1)
+
+
+def i23_feet_crossed(env, asset_cfg, minimum_width=0.09):
+    robot = env.scene[asset_cfg.name]
+    feet = robot.data.body_link_pos_w[:, asset_cfg.body_ids, :]
+    relative = quat_apply_inverse(robot.data.root_link_quat_w, feet[:, 0] - feet[:, 1])
+    return relative[:, 1] < minimum_width
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.utils.lab_api.math import quat_apply_inverse, quat_from_euler_xyz

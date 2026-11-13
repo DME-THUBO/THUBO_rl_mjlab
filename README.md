@@ -3,6 +3,10 @@
 12-DoF THUBO simulation with MJLab, MuJoCo Warp, and STL geometry from `mjcf/THUBO.xml`.
 Hardware deployment is outside this repository's current scope.
 
+## I23 walking training — November 12–13, 2026
+
+The I23 PPO run reached 4,000 updates. [Replay instructions, settings and validation](AAAMigration/I23_training_20261112/README.md) include the Viser viewer used for policy playback. [Download trained checkpoints and run records](https://github.com/DME-THUBO/THUBO_rl_mjlab/releases/tag/i23-walk-20261112). This is a procedural gait experiment; natural human walking and hardware performance remain unverified.
+
 ## Shared configuration and MDP
 
 - `dme_thubo/mdp.py`: every custom standing, velocity, combined recovery, and HoST term and per-environment runtime state. Upstream MJLab terms remain upstream references.
@@ -22,6 +26,7 @@ The HoST runner retains grouped GAE, separate group advantage normalization and 
 
 | Task ID | Actor/critic observations | Actions and reset | Runner |
 | --- | --- | --- | --- |
+| `THUBO-I23-Human-Walk` | 47 | 12 I23 joint targets, scale 0.25; mild crouch | RSL-RL |
 | `THUBO-Flat-Stand` | 42 | 12 default-offset position targets, scale 0.35; standing reset | RSL-RL |
 | `THUBO-Flat-Velocity` | 47 | same actions; twist command and gait phase | RSL-RL |
 | `HoST-GetUp-THUBO` | 43 per frame × 6 = 258 | 12 relative position actions; fallen reset and curricula | HoST PPO |

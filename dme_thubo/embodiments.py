@@ -20,6 +20,10 @@ def robot_cfg(name):
             mass=2.946841787,
             reset_height=0.12,
         )
+    if name == "thubo_i23":
+        from .robot_i23 import get_robot_cfg as get_i23
+        settings = json.loads((ROOT / "i23_training_settings.json").read_text())
+        return get_i23(), dict(height=settings["default_root_pos_m"][2], base="pelvis", feet=("left_ankle_roll", "right_ankle_roll"), mass=settings["model_mass_kg"], reset_height=0.12)
     if name != "pi":
         raise ValueError(name)
     directory = ROOT / "src/assets/robots/pi"

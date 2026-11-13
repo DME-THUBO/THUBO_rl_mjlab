@@ -1,0 +1,161 @@
+{
+  "state": "completed",
+  "completed_updates": 4000,
+  "planned_updates": 4000,
+  "task": "THUBO-I23-Human-Walk",
+  "algorithm": "PPO (RSL-RL / MJLab)",
+  "training_started": "2026-11-12T21:22:21+08:00",
+  "training_finished": "2026-11-13T02:33:20.741871+08:00",
+  "resumed_from_iteration": 1750,
+  "latest_checkpoint": "model_3999.pt",
+  "checkpoint_sha256": "003a2a9282c98869e31df648d5aadbde7cdf6642c2bc47d1567ea6063cd59eab",
+  "native_iteration": 3999,
+  "checkpoint_tensors_finite": true,
+  "num_envs": 512,
+  "rollout_steps": 32,
+  "nominal_simulated_transitions": 65536000,
+  "model_sha256": "f61387662447ae1b2856e7bb5df384031cb87c4c63c1f65b1b3a7d698feac06f",
+  "original_training_source_commit": "60e50662d0e346c176c710bf3c3f7383120ba69c",
+  "motion_capture_used": false,
+  "performance_verified": false,
+  "physical_walking_verified": false,
+  "metrics": {
+    "Episode_Reward/gait_contact": {
+      "step": 3995,
+      "value": 40.6840934753418
+    },
+    "Episode_Reward/contact_slide": {
+      "step": 3995,
+      "value": -0.4494364559650421
+    },
+    "Episode_Reward/stand_still": {
+      "step": 3995,
+      "value": -1.4373855590820312
+    },
+    "Episode_Termination/fell": {
+      "step": 3995,
+      "value": 0.0
+    },
+    "Episode_Reward/pose": {
+      "step": 3995,
+      "value": 4.7161664962768555
+    },
+    "Episode_Reward/joint_velocity": {
+      "step": 3995,
+      "value": -1.0763025283813477
+    },
+    "Episode_Reward/alive": {
+      "step": 3995,
+      "value": 50.0
+    },
+    "Episode_Termination/time_out": {
+      "step": 3995,
+      "value": 1.0909091234207153
+    },
+    "Episode_Reward/track_angular_velocity": {
+      "step": 3995,
+      "value": 12.8052396774292
+    },
+    "Metrics/twist/error_vel_yaw": {
+      "step": 3995,
+      "value": 0.3827250301837921
+    },
+    "Metrics/twist/error_vel_xy": {
+      "step": 3995,
+      "value": 0.08817873895168304
+    },
+    "Episode_Reward/gait_reference": {
+      "step": 3995,
+      "value": 11.968714714050293
+    },
+    "Episode_Reward/upright": {
+      "step": 3995,
+      "value": 99.6754379272461
+    },
+    "Episode_Termination/feet_crossed": {
+      "step": 3995,
+      "value": 0.0
+    },
+    "Episode_Reward/body_sway": {
+      "step": 3995,
+      "value": -0.6350216865539551
+    },
+    "Episode_Reward/feet_flat_orientation": {
+      "step": 3995,
+      "value": 47.3880500793457
+    },
+    "Episode_Reward/feet_clearance_swing": {
+      "step": 3995,
+      "value": 27.328792572021484
+    },
+    "Episode_Reward/action_rate": {
+      "step": 3995,
+      "value": -1.3054507970809937
+    },
+    "Episode_Termination/low_root": {
+      "step": 3995,
+      "value": 0.0
+    },
+    "Episode_Reward/track_linear_velocity": {
+      "step": 3995,
+      "value": 123.60272216796875
+    },
+    "Episode_Reward/root_height": {
+      "step": 3995,
+      "value": 99.72623443603516
+    },
+    "Episode_Reward/feet_slide": {
+      "step": 3995,
+      "value": 0.0
+    },
+    "Loss/value": {
+      "step": 3995,
+      "value": 106.37003326416016
+    },
+    "Loss/surrogate": {
+      "step": 3995,
+      "value": -0.00284607638604939
+    },
+    "Loss/entropy": {
+      "step": 3995,
+      "value": -10.616289138793945
+    },
+    "Loss/learning_rate": {
+      "step": 3995,
+      "value": 2.2500000341096893e-05
+    },
+    "Policy/mean_std": {
+      "step": 3995,
+      "value": 0.1263149082660675
+    },
+    "Perf/total_fps": {
+      "step": 3995,
+      "value": 11263.0
+    },
+    "Perf/collection_time": {
+      "step": 3995,
+      "value": 1.3229269981384277
+    },
+    "Perf/learning_time": {
+      "step": 3995,
+      "value": 0.13169264793395996
+    },
+    "Train/mean_reward": {
+      "step": 3995,
+      "value": 10371.306640625
+    },
+    "Train/mean_episode_length": {
+      "step": 3995,
+      "value": 1000.0
+    },
+    "Train/mean_reward/time": {
+      "step": 2820,
+      "value": 10371.306640625
+    },
+    "Train/mean_episode_length/time": {
+      "step": 2820,
+      "value": 1000.0
+    }
+  },
+  "release_url": "https://github.com/DME-THUBO/THUBO_rl_mjlab/releases/tag/i23-walk-20261112"
+}
