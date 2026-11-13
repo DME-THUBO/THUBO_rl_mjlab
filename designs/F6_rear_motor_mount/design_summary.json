@@ -1,0 +1,106 @@
+{
+  "part": "F6_STEP_Rear_Motor_Mount",
+  "revision": "F6 supplied STEP fit trial",
+  "quantity": 1,
+  "source_file": "st-3250m-20211119-B.stp",
+  "source_sha256": "4182ac210720ac5d0a0724aaf29d0d5fbfa58c98439a1431cbaabb80ac6ac201",
+  "source_internal_header_name": "ST-3235M-20211119-A_ASM",
+  "source_filename_header_mismatch": true,
+  "source_solid_count": 13,
+  "source_units": "mm",
+  "source_to_local": {
+    "rotation_axis": [
+      1,
+      1,
+      -1
+    ],
+    "rotation_deg": 120,
+    "translation_mm": [
+      8.100000000000001,
+      0,
+      -25.5
+    ]
+  },
+  "source_rear_mounting_face_y_mm": -25.6,
+  "source_hole_axes_xz_mm": [
+    [
+      -17.2,
+      -10.25
+    ],
+    [
+      -17.2,
+      10.25
+    ],
+    [
+      7.25,
+      -10.25
+    ],
+    [
+      7.25,
+      10.25
+    ]
+  ],
+  "source_hole_core_radius_mm": 0.8,
+  "source_hole_thread_spec_confirmed": false,
+  "hole_centers_local_yz_mm": [
+    [
+      -10.25,
+      -8.3
+    ],
+    [
+      10.25,
+      -8.3
+    ],
+    [
+      -10.25,
+      -32.75
+    ],
+    [
+      10.25,
+      -32.75
+    ]
+  ],
+  "hole_pitch_y_mm": 20.5,
+  "hole_pitch_z_mm": 24.45,
+  "clearance_hole_diameter_mm": 2.5,
+  "holes_based_on_supplied_STEP": true,
+  "plate_thickness_mm": 4.5,
+  "rear_seat_x_mm": -17.5,
+  "plate_z_range_mm": [
+    -47,
+    17
+  ],
+  "lower_extension_mm": 8,
+  "lower_hole_edge_to_bottom_mm": 13.0,
+  "boss_relief_diameter_mm": 20.4,
+  "source_rear_horn_diameter_mm": 19.2,
+  "nominal_horn_radial_clearance_mm": 0.6,
+  "connector_relief_yz_mm": [
+    20.2,
+    14.2
+  ],
+  "connector_relief_center_z_mm": -23.6,
+  "connector_relief_corner_radius_mm": 2.5,
+  "openings_joined": true,
+  "minimum_nominal_hole_to_connector_relief_ligament_mm": 1.5154534467603078,
+  "minimum_nominal_hole_to_boss_relief_ligament_mm": 1.7391053525248648,
+  "screw_length_mm": null,
+  "shown_screw_reference_mm": 6,
+  "print_size_mm": [
+    64.0,
+    39.0,
+    34.29999923706055
+  ],
+  "print_orientation": "Flat rear face on bed",
+  "single_watertight_volume": true,
+  "solid_volume_mm3": 13177.038599035603,
+  "printed_stl_sha256": "bf5024c0e9de94ebb7eb6178a1b54c6a04603635df6ecabd17be352cef8b1ef8",
+  "foot_stl_unchanged": {
+    "L6_integrated_frame.stl": "820ae3f8cba02f068b647ee4e5c110e7113d7bf9af4a361a9ed035fad3dcb920",
+    "R6_integrated_frame.stl": "17bc6ef4cb0d67600a201c91a02a174024b9f6315485031d7cb1c5fcc1a178ff"
+  },
+  "original_F5_unchanged": true,
+  "physical_fit_verified": false,
+  "strength_tested": false,
+  "preservation_tag": "stl-f6-rear-mount-20261113"
+}

@@ -1,0 +1,5 @@
+# Preserve CAD, print projects and previews byte-for-byte across platforms.
+STL/*.stl binary
+CAD/*.step binary
+A1_PROJECT/*.3mf binary
+PREVIEW/*.png binary

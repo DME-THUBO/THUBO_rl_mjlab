@@ -1,0 +1,15 @@
+{
+  "printer": "Bambu Lab A1",
+  "material": "PLA",
+  "nozzle_mm": 0.4,
+  "layer_mm": 0.2,
+  "walls": 6,
+  "infill": "45% gyroid",
+  "support": false,
+  "weight_g": 15.23,
+  "time_seconds": 3638,
+  "outside_bed": false,
+  "crc_pass": true,
+  "source_stl_sha256": "bf5024c0e9de94ebb7eb6178a1b54c6a04603635df6ecabd17be352cef8b1ef8",
+  "project_sha256": "19104a5f48287b627d73611c7b03f95a192fb8bd78003a6cc701d2f628f2aa09"
+}

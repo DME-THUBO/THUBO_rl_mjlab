@@ -1,0 +1,18 @@
+{
+  "stl_sha256": "bf5024c0e9de94ebb7eb6178a1b54c6a04603635df6ecabd17be352cef8b1ef8",
+  "matches_original_F6": true,
+  "closed_single_volume": true,
+  "mesh_bounds_mm": [
+    64.0,
+    39.0,
+    34.29999923706055
+  ],
+  "mesh_volume_mm3": 13177.586971899053,
+  "A1_3mf_crc_pass": true,
+  "A1_mesh_hash_matches": true,
+  "foot_files_unchanged": true,
+  "original_local_package_unchanged": true,
+  "geometry_regenerated": false,
+  "physical_fit_verified": false,
+  "strength_tested": false
+}
