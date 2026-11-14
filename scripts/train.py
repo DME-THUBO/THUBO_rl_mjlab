@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Launch MJLab's RSL-RL PPO runner for THUBO tasks (flat velocity by default)."""
+"""Launch MJLab's RSL-RL PPO runner for THUBO rough-terrain velocity tracking."""
 
 from dataclasses import replace
 from pathlib import Path

@@ -17,7 +17,7 @@ Run `.venv/bin/python scripts/validate_model.py` to check the MJCF, joints, actu
 
 ## Coding Style & Naming Conventions
 
-Use four spaces for Python indentation. Follow existing Python conventions: `snake_case` for functions, variables, and modules; `PascalCase` for classes; and descriptive task IDs such as `THUBO-Flat-Stand`. Put every custom MDP term and runtime state in `dme_thubo/mdp.py`. Build all environments through `dme_thubo/env_cfg.py:dme_thubo_env_cfg`; task directories must not copy common environment configuration or construct a standing baseline and override it. The common factory must not import registration modules. No formatter or linter is configured in `pyproject.toml`; keep imports tidy and match nearby code.
+Use four spaces for Python indentation. Follow existing Python conventions: `snake_case` for functions, variables, and modules; `PascalCase` for classes; and descriptive task IDs such as `THUBO-Flat-Stand`. Keep task-specific environment and reward changes in their existing configuration/MDP modules. No formatter or linter is configured in `pyproject.toml`; keep imports tidy and match nearby code.
 
 ## Testing Guidelines
 
@@ -30,11 +30,3 @@ The repository has no commit history from which to infer a message convention. U
 ## Configuration & Scope
 
 This milestone targets simulation training for the 12-DoF THUBO robot. Hardware drivers and deployment are outside the current scope. Keep credentials and machine-specific paths out of tracked files, and review `AAAMigration/TODO.md` before broadening project scope.
-
-## Shared tasks and HoST validation
-
-`src/tasks/standing`, `velocity`, `velocity_getup` and `HoST_getUp` contain thin registration/compatibility wrappers. HoST additionally owns its dedicated four-value `ppo.py`, license and a `robots.py` compatibility re-export. Pure embodiment adapters belong in `dme_thubo/embodiments.py`.
-
-Run model validation, `scripts/refactor_checks.py`, `scripts/refactor_asset_checks.py`, `scripts/refactor_runtime_checks.py`, `scripts/host/checks.py`, then HoST smoke training and checkpoint replay as documented in README. Preserve six-frame observation order, relative control, independent curricula, four-group rewards/GAE and old checkpoint missing-action-mode absolute behavior. Verify train/play and actor/critic mutable isolation. Short training is not proof of unassisted recovery; use held-standing evaluation separately.
-
-Pi XML and URDF are ignored local optional assets: do not force-add them. Preserve the converter, source metadata and licenses. Missing Pi must not break THUBO registration; explicit selection must explain generation. Rough velocity remains disabled; rough stand has no registration. Attribute velocity to unitree_rl_mjlab and recovery to InternRobotics/HoST with its immutable source commit and LICENSE_HoST. Never invent measured servo parameters or successful recovery results.
