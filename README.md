@@ -1,67 +1,54 @@
 # DME-THUBO
 
-This repository contains the simulation-only first milestone for the 12-DoF
-THUBO robot with STS3250 actuators. The task uses the checked-in `mjcf/THUBO.xml` and STL meshes,
-MJLab's ManagerBased environment, MuJoCo Warp simulation, and RSL-RL PPO.
+Simulation training for the 12-DoF THUBO robot using MJLab, MuJoCo and RSL-RL PPO.
+The checked-in robot model is [`mjcf/THUBO.xml`](mjcf/THUBO.xml), with STL geometry in
+[`meshes/`](meshes/) and actuator metadata in [`sts3250_official.json`](sts3250_official.json).
 
-The package layout follows the upstream
-[`unitree_rl_mjlab`](https://github.com/unitreerobotics/unitree_rl_mjlab)
-organization. See [`AAAMigration/ARCHITECTURE.md`](AAAMigration/ARCHITECTURE.md).
-
-Create and populate the project-owned environment with `uv`:
+## Setup
 
 ```bash
 uv venv .venv
 uv pip install --python .venv/bin/python -e .
-```
-
-Use the Python environment that provides `mjlab`, `mujoco`, `mujoco-warp`,
-PyTorch, and `rsl_rl`:
-
-```bash
 .venv/bin/python scripts/validate_model.py
-.venv/bin/python scripts/train.py THUBO-Rough-Velocity
 ```
 
-The default training profile uses 2048 parallel environments and 4000 PPO
-iterations. The entry point also accepts `DME_THUBO_NUM_ENVS`,
-`DME_THUBO_NUM_STEPS`, `DME_THUBO_MAX_ITERATIONS` (maximum 4000), and
-`DME_THUBO_LOG_ROOT` for a short smoke run.
+The validator checks the MJCF, meshes, joints, actuators and model metadata before
+simulation.
 
-Run rough-terrain velocity tracking with a Viser viewer that automatically
-hotloads each new 100-iteration checkpoint:
+## Tasks
+
+- `THUBO-Flat-Stand`: standing and balance on a plane.
+- `THUBO-Flat-Velocity`: commanded velocity tracking on a plane.
+- `HoST-GetUp-THUBO`: HoST get-up task for the THUBO robot.
+
+Train a task with:
 
 ```bash
-./.venv/bin/python scripts/train_with_viser.py THUBO-Rough-Velocity \
-  --num-envs 2048 --iterations 4000 --save-interval 100 --viser-port 8080
+.venv/bin/python scripts/train.py THUBO-Flat-Stand
 ```
 
-Open `http://localhost:8080` to view the policy. Training runs on CUDA while
-the single-environment Viser simulation runs on CPU.
-
-TensorBoard for the completed run is available at `http://localhost:6006`:
+For a short smoke run:
 
 ```bash
-./.venv/bin/tensorboard --logdir logs/rsl_rl/dme_thubo_rough_velocity \
-  --host 127.0.0.1 --port 6006
+DME_THUBO_NUM_ENVS=8 DME_THUBO_NUM_STEPS=4 DME_THUBO_MAX_ITERATIONS=1 \
+  DME_THUBO_LOG_ROOT=/tmp/dme_thubo_smoke \
+  .venv/bin/python scripts/train.py THUBO-Flat-Stand
 ```
 
-Replay any local checkpoint in the native MuJoCo viewer:
+Replay a checkpoint in the native viewer:
 
 ```bash
-./.venv/bin/python scripts/play.py THUBO-Rough-Velocity \
-  logs/rsl_rl/dme_thubo_rough_velocity/<run>/model_3999.pt
+.venv/bin/python scripts/play.py THUBO-Flat-Stand path/to/model.pt
 ```
 
-Use `--viewer viser` to replay it in a browser-based viewer.
+Use the Viser training entry point when a browser viewer is needed:
 
-`validate_model.py` checks the 12 joints and actuators, mesh count, source root
-height, total mass, and actuator metadata before the environment is built.
-Registered tasks are `THUBO-Flat-Stand`, `THUBO-Rough-Stand`,
-`THUBO-Flat-Velocity`, and `THUBO-Rough-Velocity`. The demonstration training
-profile uses `THUBO-Rough-Velocity` on procedural rough terrain.
+```bash
+.venv/bin/python scripts/train_with_viser.py THUBO-Flat-Stand \
+  --num-envs 2048 --iterations 4000 --viser-port 8080
+```
 
-The velocity task has 12 position-target actions and 45 actor observations.
-Hardware drivers, deployment, and sim-to-real work are intentionally outside
-this milestone; see
-[`AAAMigration/TODO.md`](AAAMigration/TODO.md) for the active scope.
+Open `http://localhost:8080` after the viewer starts. Training runs in simulation;
+hardware drivers, deployment and sim-to-real validation are outside this milestone.
+See [`AGENTS.md`](AGENTS.md) and [`AAAMigration/TODO.md`](AAAMigration/TODO.md) for
+repository constraints and deferred work.

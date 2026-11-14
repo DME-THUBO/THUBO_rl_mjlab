@@ -2,4 +2,3 @@
 
 from . import standing  # noqa: F401
 from . import velocity  # noqa: F401
-from . import velocity_getup  # noqa: F401
